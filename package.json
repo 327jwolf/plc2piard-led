@@ -1,0 +1,16 @@
+{
+  "name": "plc2piard-led",
+  "version": "1.0.0",
+  "description": "This application will poll a plc for current function executed using a rpi and transfer information to an arduino to create scenes with LEDs.",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "327jwolf",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.16.3",
+    "nodepccc": "^0.1.8",
+    "serialport": "^6.2.1"
+  }
+}

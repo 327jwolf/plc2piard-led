@@ -1,0 +1,267 @@
+/*
+  DigitalReadSerial
+ Reads a digital input on pin 2, prints the result to the serial monitor 
+ 
+ This example code is in the public domain.
+ */
+
+// digital pin 2 has a pushbutton attached to it. Give it a name:
+int pushButton = 2;
+
+// the setup routine runs once when you press reset:
+void setup() {
+  // initialize serial communication at 9600 bits per second:
+  Serial.begin(9600);
+  // make the pushbutton's pin an input:
+  pinMode(pushButton, INPUT);
+}
+
+// the loop routine runs over and over again forever:
+void loop() {
+  // read the input pin:
+  int buttonState = digitalRead(pushButton);
+  // print out the state of the button:
+  Serial.println(buttonState);
+  delay(1);        // delay in between reads for stability
+}
+
+*********************************************************************************
+
+int ledPin = 9;    // LED connected to digital pin 9
+
+void setup()  { 
+  // nothing happens in setup 
+} 
+
+void loop()  { 
+  // fade in from min to max in increments of 5 points:
+  for(int fadeValue = 0 ; fadeValue <= 255; fadeValue +=5) { 
+    // sets the value (range from 0 to 255):
+    analogWrite(ledPin, fadeValue);         
+    // wait for 30 milliseconds to see the dimming effect    
+    delay(30);                            
+  } 
+
+  // fade out from max to min in increments of 5 points:
+  for(int fadeValue = 255 ; fadeValue >= 0; fadeValue -=5) { 
+    // sets the value (range from 0 to 255):
+    analogWrite(ledPin, fadeValue);         
+    // wait for 30 milliseconds to see the dimming effect    
+    delay(30);                            
+  } 
+}
+
+******************************************************************************
+
+int valueOfFunction;
+int functionType;// solid color, blink, fade, timing(for pwm)
+
+int displaySolidColor(color){
+
+  return 255
+}
+
+int blinkColor(color, time){
+
+  return 255
+}
+
+int fadeColor(color1, color2, time){
+
+  return 255
+}
+
+
+****************************************************************************
+/*
+ Fading
+ 
+ This example shows how to fade an LED using the analogWrite() function.
+ 
+ The circuit:
+ * LED attached from digital pin 9 to ground.
+ 
+ Created 1 Nov 2008
+ By David A. Mellis
+ modified 30 Aug 2011
+ By Tom Igoe
+ 
+ http://arduino.cc/en/Tutorial/Fading
+ 
+ This example code is in the public domain.
+ 
+ */
+
+/* 
+ *  Adapted from the Fading sketch
+ *  Modified for 3 LEDs on pins 9, 10, 11 by R. Brown, 12 DEC 2014
+ *  to emulate a Glade PlugIns RGB scent dispenser.
+ *  9 second cycle, 6 phases per cycle or 1.5 sec. per phase
+ *  For 256 step fades, ~6 mS delay time per step.
+  */
+int RledPin =  9;    // Red LED connected to digital pin 9
+int GledPin = 10;    // Green LED connected to digital pin 10
+int BledPin = 11;    // Blue LED connected to digital pin 11
+int _delay  =  6;    // Delay time
+int _step   =  1;    // Increment/decrement size
+
+int FadeOn(int pin)
+{
+  int fadeValue;
+  // Ramp up pin  
+  for(fadeValue = 0 ; fadeValue <= 255; fadeValue += _step) {
+    // sets the value (range from 0 to 255):
+    analogWrite(pin, fadeValue);        
+    // wait to see the dimming effect    
+    delay(_delay);                            
+  }
+  analogWrite(pin, 255);        
+  return(fadeValue);
+}
+
+int FadeOff(int pin)
+{
+  int fadeValue;
+  // Ramp down pin  
+  for(fadeValue = 255 ; fadeValue >= 0; fadeValue -= _step) {
+    // sets the value (range from 0 to 255):
+    analogWrite(pin, fadeValue);        
+    // wait to see the dimming effect    
+    delay(_delay);                            
+  }
+  analogWrite(pin, 0);        
+  return(fadeValue);
+}
+
+void setup()  {
+   // sets the pins as output
+   pinMode(RledPin, OUTPUT);
+   pinMode(GledPin, OUTPUT);
+   pinMode(BledPin, OUTPUT);
+   
+  // LEDs off
+  analogWrite(RledPin, 0);        
+  analogWrite(GledPin, 0); 
+  // Ramp up blue LED  
+  FadeOn(BledPin); 
+}
+
+void loop()  {
+  // phase 0: fade in red from min to max
+  FadeOn(RledPin); 
+
+  // phase 1: fade out blue from max to min
+  FadeOff(BledPin); 
+
+  // phase 2: fade in green from min to max
+  FadeOn(GledPin); 
+
+  // phase 3: fade out red from max to min
+  FadeOff(RledPin); 
+
+  // phase 4: fade in blue from min to max
+  FadeOn(BledPin); 
+
+  // phase 5: fade out from max to min
+  FadeOff(GledPin);        
+}
+
+************************************************************************************
+
+// Example 5 - Receive with start- and end-markers combined with parsing
+
+const byte numChars = 32;
+char receivedChars[numChars];
+char tempChars[numChars];        // temporary array for use when parsing
+
+      // variables to hold the parsed data
+char messageFromPC[numChars] = {0};
+int integerFromPC = 0;
+float floatFromPC = 0.0;
+
+boolean newData = false;
+
+//============
+
+void setup() {
+    Serial.begin(9600);
+    Serial.println("This demo expects 3 pieces of data - text, an integer and a floating point value");
+    Serial.println("Enter data in this style <HelloWorld, 12, 24.7>  ");
+    Serial.println();
+}
+
+//============
+
+void loop() {
+    recvWithStartEndMarkers();
+    if (newData == true) {
+        strcpy(tempChars, receivedChars);
+            // this temporary copy is necessary to protect the original data
+            //   because strtok() used in parseData() replaces the commas with \0
+        parseData();
+        showParsedData();
+        newData = false;
+    }
+}
+
+//============
+
+void recvWithStartEndMarkers() {
+    static boolean recvInProgress = false;
+    static byte ndx = 0;
+    char startMarker = '<';
+    char endMarker = '>';
+    char rc;
+
+    while (Serial.available() > 0 && newData == false) {
+        rc = Serial.read();
+
+        if (recvInProgress == true) {
+            if (rc != endMarker) {
+                receivedChars[ndx] = rc;
+                ndx++;
+                if (ndx >= numChars) {
+                    ndx = numChars - 1;
+                }
+            }
+            else {
+                receivedChars[ndx] = '\0'; // terminate the string
+                recvInProgress = false;
+                ndx = 0;
+                newData = true;
+            }
+        }
+
+        else if (rc == startMarker) {
+            recvInProgress = true;
+        }
+    }
+}
+
+//============
+
+void parseData() {      // split the data into its parts
+
+    char * strtokIndx; // this is used by strtok() as an index
+
+    strtokIndx = strtok(tempChars,",");      // get the first part - the string
+    strcpy(messageFromPC, strtokIndx); // copy it to messageFromPC
+ 
+    strtokIndx = strtok(NULL, ","); // this continues where the previous call left off
+    integerFromPC = atoi(strtokIndx);     // convert this part to an integer
+
+    strtokIndx = strtok(NULL, ",");
+    floatFromPC = atof(strtokIndx);     // convert this part to a float
+
+}
+
+//============
+
+void showParsedData() {
+    Serial.print("Message ");
+    Serial.println(messageFromPC);
+    Serial.print("Integer ");
+    Serial.println(integerFromPC);
+    Serial.print("Float ");
+    Serial.println(floatFromPC);
+}
