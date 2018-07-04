@@ -1,19 +1,20 @@
-var fins = require('./lib/index');
+const fins = require('./lib/index');
+const ips = require('../../middleware/ips.config')
 
 
 function getOmronValues (cb) {
-	var config = {
-		ip_address: '0.0.0.0',
+	const config = {
+		ip_address: ips.Galena,
 		port: 9600,
 		}
-
-	var cnt1 = 0;
-	var msgID1 = function() {
+		console.log(config.ip_address)
+	let cnt1 = 0;
+	let msgID1 = function() {
 	    return cnt1 = (cnt1 % 254) + 1;
 	};
 
 
-	var client = fins.FinsClient(config.port,config.ip_address);
+	const client = fins.FinsClient(config.port,config.ip_address);
 
 
 	client.on('error',function(error) {
@@ -28,12 +29,12 @@ function getOmronValues (cb) {
 	//setInterval(readOmronPLC, 500);
 
 	
-	var addresses = [
+	let addresses = [
 	//['D05700', 7],
 	//['C2000', 1],
 	['C6000', 1]
-	]
-	var res
+	];
+	let res;
 	addresses.map(x => {
 		client.read(x[0], x[1], function(err,bytes) {
 			msgID1()

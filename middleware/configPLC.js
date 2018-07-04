@@ -1,5 +1,5 @@
 //configPLC.js
-
+const ips = require('./ips.config')
 let neosho = '0.0.0.0';
 
 
