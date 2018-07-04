@@ -3,7 +3,7 @@ var fins = require('./lib/index');
 
 function getOmronValues (cb) {
 	var config = {
-		ip_address: '76.7.3.182',
+		ip_address: '0.0.0.0',
 		port: 9600,
 		}
 
