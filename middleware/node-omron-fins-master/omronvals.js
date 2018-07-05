@@ -7,7 +7,6 @@ function getOmronValues (cb) {
 		ip_address: ips.Galena,
 		port: 9600,
 		}
-		console.log(config.ip_address)
 	let cnt1 = 0;
 	let msgID1 = function() {
 	    return cnt1 = (cnt1 % 254) + 1;
@@ -22,19 +21,12 @@ function getOmronValues (cb) {
 	})
 
 
-	
-
-	
-
-	//setInterval(readOmronPLC, 500);
-
-	
 	let addresses = [
 	//['D05700', 7],
 	//['C2000', 1],
 	['C6000', 1]
 	];
-	let res;
+
 	addresses.map(x => {
 		client.read(x[0], x[1], function(err,bytes) {
 			msgID1()

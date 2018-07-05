@@ -12,7 +12,6 @@ let omronFunctions = {
 	'10': 'chem2',
 	'11': 'citywater',
 	'12': 'spotfree',
-	'13': ''
 }
 
 module.exports = omronFunctions

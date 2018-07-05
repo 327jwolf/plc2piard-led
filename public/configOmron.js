@@ -1,75 +1,18 @@
 let functConf = {
-	'df': {
-		'red': 0,
-		'green': 255,
-		'blue': 0
-	},
-	'bu': {
-		'red': 255,
-		'green': 25,
-		'blue': 0
-	},
-	'stop': {
-		'red': 255,
-		'green': 0,
-		'blue': 0
-	},
-	'presoak': {
-		'red': 255,
-		'green': 0,
-		'blue': 134
-	},
-	'tireCleaner': {
-		'red': 255,
-		'green': 60,
-		'blue': 0
-	},
-	'trifoam': {
-		'red': 23,
-		'green': 123,
-		'blue': 134
-	},
-	'foambath': {
-		'red': 23,
-		'green': 123,
-		'blue': 134
-	},
-	'highpressure': {
-		'red': 23,
-		'green': 123,
-		'blue': 134
-	},
-	'rockers': {
-		'red': 23,
-		'green': 123,
-		'blue': 134
-	},
-	'clearcoat': {
-		'red': 23,
-		'green': 123,
-		'blue': 134
-	},
-	'chem1': {
-		'red': 23,
-		'green': 123,
-		'blue': 134
-	},
-	'chem2': {
-		'red': 23,
-		'green': 123,
-		'blue': 134
-	},
-	'citywater': {
-		'red': 23,
-		'green': 123,
-		'blue': 134
-	},
-	'spotfree': {
-		'red': 23,
-		'green': 123,
-		'blue': 134
-	},
-	
+	'df': [[0,255,0]],
+	'bu': [[255,25,0]],
+	'stop': [[255,0,0]],
+	'presoak': [[255,0,134]],
+	'tireCleaner': [[255,60,0]],
+	'trifoam': [[255,0,0], [0,255,0],[255,20,0]],
+	'foambath': [[23,123,134]],
+	'highpressure': [[23,123,134]],
+	'rockers': [[23,123,134]],
+	'clearcoat': [[23,123,134]],
+	'chem1': [[23,123,134]],
+	'chem2': [[23,123,134]],
+	'citywater': [[23,123,134]],
+	'spotfree': [[23,123,134]],
 }
 
 module.exports = functConf

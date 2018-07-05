@@ -32,14 +32,14 @@ const sPort = new SerialPort("/dev/ttyACM0",
 		);
 
 let output1;
+let prevOutput1;
 let output2 = {};
+let intervalTime = 500;
 
-let red = 1;
-let green = 1;
-let blue = 1;
-let outData = `${red}, ${green}, ${blue}\n`;
-
-
+// let red = 1;
+// let green = 1;
+// let blue = 1;
+let outData = ''//`${red}, ${green}, ${blue}\n`;
 
 //*************************************************
 
@@ -53,6 +53,8 @@ sPort.on('open', function () {
   console.log('Communication is on!');
 })
 
+setInterval( () => { sPort.write(outData, (err) => err ? console.log('Error: ', err.message): "")}, intervalTime)
+
 let val = 0;
 const colorCnt = function() {
     return val = (val % 254) + 1;
@@ -60,48 +62,59 @@ const colorCnt = function() {
 
 const rand = (max, min) => Math.floor(Math.random() * (Math.floor(max)-(Math.ceil(min) + 1) + (Math.ceil(min))));
 
-setInterval( () => {
+let blink = false;
 
-	for(let i = 0; i < 13; i++){
+function omronTranslate () {
+
+	for(let i = 0; i < Object.keys(omronFunctions).length; i++){
 		if ((output1 & 1 << i) != 0) {
-			output2 = functConf[omronFunctions[i]];
+			console.log('current function length', functConf[omronFunctions[i]].length)
+			outputArray = functConf[omronFunctions[i]]
+			output2 = outputArray[0];
 		}
 	}
+
 	//console.log('output1:************************************* ', output1);
-	if (output1 == 0) {
-		output2.red = rand(255, 0);
-		output2.green = rand(255, 0);
-		output2.blue = rand(255, 0);
+	if (output1[0] == 0) {
+		output2[0] = rand(255, 0);
+		output2[1] = rand(255, 0);
+		output2[2] = rand(255, 0);
+		intervalTime = 750;
+	}else{
+		intervalTime = 500;
 	}
 
-	outData = `${output2.red}, ${output2.green}, ${output2.blue}\n`;
-	console.log('outdata: ', outData);
+	if(output1[0] == 1){
+		blink ?	outData = `0, 0, 0\n` : outData = `${output2[0]}, ${output2[1]}, ${output2[2]}\n`
+	}else{
+		outData = `${output2[0]}, ${output2[1]}, ${output2[2]}\n`;
+	}
 
-	sPort.write(outData, (err) => {
-			err ? console.log('Error: ', err.message): "";
-		})
-
-}, 750)
-
+	blink = !blink;
+	prevOutput1 = output1;
+	//console.log('outdata: ', outData);
+}
 
 //*************************************************
 if (plcType == "Omron") {
 	let res = msg => {
-		//console.log(msg);
-		output1 = msg;
+		console.log(msg);
+		if (JSON.stringify(msg) != JSON.stringify(output1)) {
+			output1 = msg;
+		}
+		omronTranslate()
 	}
-	setInterval(() => plcOmron(res), 500);
+	setInterval(() => plcOmron(res), intervalTime);
 }
 
 //************************************************
 
-
-
-if (plcType == "CompactLogix")
- {
+if (plcType == "CompactLogix") {
 	let getMLInfo = (msg) => {
-		//console.log('msg =====================> ', msg[0]);
-		output1 = msg[0];
+		if (JSON.stringify(msg) != JSON.stringify(output1)) {
+			//console.log('msg =====================> ', msg[0]);
+			output1 = msg[0];
+		}
 	}
 	setInterval(() => getPLCInfo('read', configPLC.plcAddr, 0, getMLInfo), 500);
 }
