@@ -50,47 +50,54 @@ const colorCnt = function() {
 };
 
 const rand = (max, min) => Math.floor(Math.random() * (Math.floor(max)-(Math.ceil(min) + 1) + (Math.ceil(min))));
-let output2 = {};
+
 let blink = false;
 
 let controlRandCnt = 0;
-let controlRandCntLim = 3;
+let controlRandCntLim = 4;
 
 let multiColorFunctionInc = 0;
-let multiColorFunction = len => multiColorFunctionInc == len -1 ? multiColorFunctionInc = 0 : multiColorFunctionInc++
+let multiColorFunction = len => multiColorFunctionInc == len-1 ? multiColorFunctionInc = 0 : multiColorFunctionInc++;
+let outData = '';
+let output2 = {};
 
 function omronTranslate (output1) {
-	let outData = '';
-
+	
+	let computedArrayLen = 1;
+	let noData = 0;
+	logIt('output1 =',output1)
 	for(let i = 0; i < Object.keys(omronFunctions).length; i++){
-		if ((output1 & 1 << i) != 0) {
-			logIt('current function length', functConf[omronFunctions[i]].length)
-			if (functConf[omronFunctions[i]].length == 1) {
-				multiColorFunctionInc = 0;
-			}
+		if ((output1[0] & 1 << i) != 0) {
+			computedArrayLen = functConf[omronFunctions[i]].length;
+			computedArrayLen == 1 ? multiColorFunctionInc = 0 : multiColorFunctionInc;
 			outputArray = functConf[omronFunctions[i]]
+			
 			output2 = outputArray[multiColorFunctionInc];
-			if (functConf[omronFunctions[i]].length > 1) {
-				 multiColorFunction(functConf[omronFunctions[i]].length);
-			}
+			logIt(`outputArray = ${JSON.stringify(outputArray)}`);
+			logIt(`output2 = ${JSON.stringify(output2)}`);
+			multiColorFunction(computedArrayLen);
+			break;
 		}
+
 	}
 
-	//console.log('output1:************************************* ', output1);
-	if (output1[0] == 0 && controlRandCnt == 0) {
-		output2[0] = rand(255, 0);
-		output2[1] = rand(255, 0);
-		output2[2] = rand(255, 0);
-		intervalTime = 750;
-	}else{
-		intervalTime = 750;
+	if (computedArrayLen == 1) {
+		//controlRandCnt = 0;
+		multiColorFunctionInc = 0;
 	}
 
 	if(output1[0] == 1){
 		blink ?	outData = `0, 0, 0\n` : outData = `${output2[0]}, ${output2[1]}, ${output2[2]}\n`
-	}else{
-		outData = `${output2[0]}, ${output2[1]}, ${output2[2]}\n`;
 	}
+	else if (output1[0] === 0) {
+		if (controlRandCnt == 0) {
+			outData = `${rand(255, 0)}, ${rand(255, 0)}, ${rand(255, 0)}\n`;
+		}
+	}
+	else{
+		outData = `${output2[0]}, ${output2[1]}, ${output2[2]}\n`; 
+	}
+
 	sPort.write(outData, (err) => err ? console.log('Error: ', err.message): "")
 	blink = !blink;
 

@@ -17,7 +17,7 @@ function getOmronValues (cb) {
 
 
 	client.on('error',function(error) {
-	  console.log("Error: ", error);
+	  console.log("Error Client: ", error);
 	})
 
 
