@@ -17,8 +17,7 @@ console.log("Express server running nodepccc at\n  => http://localhost:" + port 
 //**********************************************************************************************************
 
 let plcType = "Omron";//"Omron" "CompactLogix"
-
-//var sendIt = x => console.log(x);
+let intervalTime = 750;
 
 const SerialPort = require("serialport");
 let Readline = SerialPort.parsers.Readline;
@@ -30,16 +29,6 @@ const sPort = new SerialPort("/dev/ttyACM0",
 		}, 
 		err => err ? console.log('Error: ', err.message): ""
 		);
-
-let output1;
-let prevOutput1;
-let output2 = {};
-let intervalTime = 500;
-
-// let red = 1;
-// let green = 1;
-// let blue = 1;
-let outData = ''//`${red}, ${green}, ${blue}\n`;
 
 //*************************************************
 
@@ -53,7 +42,7 @@ sPort.on('open', function () {
   console.log('Communication is on!');
 })
 
-setInterval( () => { sPort.write(outData, (err) => err ? console.log('Error: ', err.message): "")}, intervalTime)
+//setInterval( () => { sPort.write(writeOutputData, (err) => err ? console.log('Error: ', err.message): "")}, intervalTime)
 
 let val = 0;
 const colorCnt = function() {
@@ -61,27 +50,40 @@ const colorCnt = function() {
 };
 
 const rand = (max, min) => Math.floor(Math.random() * (Math.floor(max)-(Math.ceil(min) + 1) + (Math.ceil(min))));
-
+let output2 = {};
 let blink = false;
 
-function omronTranslate () {
+let controlRandCnt = 0;
+let controlRandCntLim = 3;
+
+let multiColorFunctionInc = 0;
+let multiColorFunction = len => multiColorFunctionInc == len -1 ? multiColorFunctionInc = 0 : multiColorFunctionInc++
+
+function omronTranslate (output1) {
+	let outData = '';
 
 	for(let i = 0; i < Object.keys(omronFunctions).length; i++){
 		if ((output1 & 1 << i) != 0) {
-			console.log('current function length', functConf[omronFunctions[i]].length)
+			logIt('current function length', functConf[omronFunctions[i]].length)
+			if (functConf[omronFunctions[i]].length == 1) {
+				multiColorFunctionInc = 0;
+			}
 			outputArray = functConf[omronFunctions[i]]
-			output2 = outputArray[0];
+			output2 = outputArray[multiColorFunctionInc];
+			if (functConf[omronFunctions[i]].length > 1) {
+				 multiColorFunction(functConf[omronFunctions[i]].length);
+			}
 		}
 	}
 
 	//console.log('output1:************************************* ', output1);
-	if (output1[0] == 0) {
+	if (output1[0] == 0 && controlRandCnt == 0) {
 		output2[0] = rand(255, 0);
 		output2[1] = rand(255, 0);
 		output2[2] = rand(255, 0);
 		intervalTime = 750;
 	}else{
-		intervalTime = 500;
+		intervalTime = 750;
 	}
 
 	if(output1[0] == 1){
@@ -89,34 +91,26 @@ function omronTranslate () {
 	}else{
 		outData = `${output2[0]}, ${output2[1]}, ${output2[2]}\n`;
 	}
-
+	sPort.write(outData, (err) => err ? console.log('Error: ', err.message): "")
 	blink = !blink;
-	prevOutput1 = output1;
-	//console.log('outdata: ', outData);
+
+	controlRandCnt++;
+	if (controlRandCnt == controlRandCntLim) {
+		controlRandCnt = 0;
+	}
+	logIt('outdata: ', outData);
 }
 
 //*************************************************
 if (plcType == "Omron") {
-	let res = msg => {
-		console.log(msg);
-		if (JSON.stringify(msg) != JSON.stringify(output1)) {
-			output1 = msg;
-		}
-		omronTranslate()
-	}
-	setInterval(() => plcOmron(res), intervalTime);
+	
+	setInterval(() => plcOmron(omronTranslate), intervalTime);
 }
 
 //************************************************
 
 if (plcType == "CompactLogix") {
-	let getMLInfo = (msg) => {
-		if (JSON.stringify(msg) != JSON.stringify(output1)) {
-			//console.log('msg =====================> ', msg[0]);
-			output1 = msg[0];
-		}
-	}
-	setInterval(() => getPLCInfo('read', configPLC.plcAddr, 0, getMLInfo), 500);
+	
+	setInterval(() => getPLCInfo('read', configPLC.plcAddr, 0, omronTranslate), intervalTime);
 }
 
-//ttyACM0

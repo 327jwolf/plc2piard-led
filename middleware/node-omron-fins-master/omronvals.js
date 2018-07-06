@@ -45,6 +45,7 @@ function getOmronValues (cb) {
 		//console.log("Response code of: ", msg.code);
 		//console.log("C1Data returned: ", msg.values);//(msg.values & 1 << driveforward) === 0 ? 0 : 1
 		cb(msg.values)
+		client.close;
 	})
 }
 

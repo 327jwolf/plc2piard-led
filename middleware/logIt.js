@@ -1,6 +1,6 @@
 
 function logIt(){
-	let dev = false;
+	let dev = true;
 	if (dev) {
 		if (console) {
 			console.log.apply(console, arguments);
