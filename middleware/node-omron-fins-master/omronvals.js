@@ -1,23 +1,25 @@
-const fins = require('./lib/index');
-const ips = require('../../middleware/ips.config')
+const fins = require('./lib/index'),
+	  ips = require('../../middleware/ips.config'),
+	  logIt = require('../logIt.js');
 
+let cnt1 = 0;
+let msgID1 = function() {
+	    return cnt1 = (cnt1 % 254) + 1;
+	};
 
 function getOmronValues (cb) {
 	const config = {
 		ip_address: ips.Galena,
 		port: 9600,
 		}
-	let cnt1 = 0;
-	let msgID1 = function() {
-	    return cnt1 = (cnt1 % 254) + 1;
-	};
-
 
 	const client = fins.FinsClient(config.port,config.ip_address);
 
 
 	client.on('error',function(error) {
 	  console.log("Error Client: ", error);
+	  cb([0]);
+	  client.close;
 	})
 
 
@@ -29,22 +31,25 @@ function getOmronValues (cb) {
 
 	addresses.map(x => {
 		client.read(x[0], x[1], function(err,bytes) {
-			msgID1()
+			logIt(`*********ReadID: ${msgID1()}***********`)
 			if (bytes) {
-				//console.log("Bytes: ", bytes);
+				logIt("Bytes: ", bytes);
 			}
 			if (err) {
-				console.log("Error: ", err);
+				console.log("ReadError: ", err);
+				cb([0]);
+	  			client.close;
 			}
 		})
 	})
 
 	client.on('reply',function(msg) {
-		//console.log("Reply from: ", msg.remotehost);
-		//console.log("Replying to issued command of: ", msg.command);
-		//console.log("Response code of: ", msg.code);
-		//console.log("C1Data returned: ", msg.values);//(msg.values & 1 << driveforward) === 0 ? 0 : 1
-		cb(msg.values)
+		logIt("Reply from: ", msg.remotehost);
+		logIt("Replying to issued command of: ", msg.command);
+		logIt("Response code of: ", msg.response);
+		logIt("C1Data returned: ", msg.values);
+		logIt("SID: ", msg.sid, '\n');
+		cb(msg.values);
 		client.close;
 	})
 }

@@ -16,7 +16,7 @@ console.log("Express server running nodepccc at\n  => http://localhost:" + port 
 
 //**********************************************************************************************************
 
-let plcType = "Omron";//"Omron" "CompactLogix"
+let plcType = "Omron";//"Omron" "microLogix"
 let intervalTime = 750;
 
 const SerialPort = require("serialport");
@@ -26,8 +26,9 @@ const sPort = new SerialPort("/dev/ttyACM0",
 		{
 			baudRate: 9600,
 			//parser: newlineParse
-		}, 
-		err => err ? console.log('Error: ', err.message): ""
+		}
+		// , 
+		// err => err ? console.log('Error: ', err.message): ""
 		);
 
 //*************************************************
@@ -35,11 +36,17 @@ const sPort = new SerialPort("/dev/ttyACM0",
 const parser = new Readline();
 sPort.pipe(parser);
 parser.on('data', function (data) {
-  console.log('data received: ' + data);
+  logIt('data received: ', data);
+  logIt('*********************************');
+  logIt('');
 })
 
 sPort.on('open', function () {
   console.log('Communication is on!');
+})
+
+sPort.on('error', function (err) {
+  console.log('Serial Port Error', err);
 })
 
 //setInterval( () => { sPort.write(writeOutputData, (err) => err ? console.log('Error: ', err.message): "")}, intervalTime)
@@ -54,7 +61,7 @@ const rand = (max, min) => Math.floor(Math.random() * (Math.floor(max)-(Math.cei
 let blink = false;
 
 let controlRandCnt = 0;
-let controlRandCntLim = 4;
+let controlRandCntLim = 2;
 
 let multiColorFunctionInc = 0;
 let multiColorFunction = len => multiColorFunctionInc == len-1 ? multiColorFunctionInc = 0 : multiColorFunctionInc++;
@@ -62,7 +69,13 @@ let outData = '';
 let output2 = {};
 
 function omronTranslate (output1) {
-	
+
+	output1 == undefined ? output1 = [0] : output1;
+
+	if (!sPort.isOpen) {
+		sPort.open()
+	}
+
 	let computedArrayLen = 1;
 	let noData = 0;
 	logIt('output1 =',output1)
@@ -98,7 +111,7 @@ function omronTranslate (output1) {
 		outData = `${output2[0]}, ${output2[1]}, ${output2[2]}\n`; 
 	}
 
-	sPort.write(outData, (err) => err ? console.log('Error: ', err.message): "")
+	sPort.write(outData, (err) => err ? console.log('Port Write Error: ', err.message): "")
 	blink = !blink;
 
 	controlRandCnt++;
@@ -116,7 +129,7 @@ if (plcType == "Omron") {
 
 //************************************************
 
-if (plcType == "CompactLogix") {
+if (plcType == "microLogix") {
 	
 	setInterval(() => getPLCInfo('read', configPLC.plcAddr, 0, omronTranslate), intervalTime);
 }
