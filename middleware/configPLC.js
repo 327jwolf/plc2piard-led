@@ -4,7 +4,7 @@ let neosho = ips.neosho;
 
 
 configPLC = {
-	plcAddr : ['N7:96', 'N7:58', 'B30:21'],
+	plcAddr : ['N31:60', 'N7:58', 'B30:21'],
 	port : 8315,
 	plcHost : neosho
 

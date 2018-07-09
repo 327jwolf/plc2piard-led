@@ -7,7 +7,7 @@ let msgID1 = function() {
 	    return cnt1 = (cnt1 % 254) + 1;
 	};
 
-function getOmronValues (cb) {
+function getOmronInfo (cb) {
 	const config = {
 		ip_address: ips.Galena,
 		port: 9600,
@@ -19,7 +19,7 @@ function getOmronValues (cb) {
 	client.on('error',function(error) {
 	  console.log("Error Client: ", error);
 	  cb([0]);
-	  client.close;
+	  client.close();
 	})
 
 
@@ -38,7 +38,7 @@ function getOmronValues (cb) {
 			if (err) {
 				console.log("ReadError: ", err);
 				cb([0]);
-	  			client.close;
+	  			client.close();
 			}
 		})
 	})
@@ -50,8 +50,8 @@ function getOmronValues (cb) {
 		logIt("C1Data returned: ", msg.values);
 		logIt("SID: ", msg.sid, '\n');
 		cb(msg.values);
-		client.close;
+		client.close();
 	})
 }
 
-module.exports = getOmronValues
+module.exports = getOmronInfo
