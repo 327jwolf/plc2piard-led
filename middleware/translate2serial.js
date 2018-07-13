@@ -1,5 +1,5 @@
 const SerialPort = require("serialport"),
-	  logIt = require('./logIt.js'),
+	  logIt = require('./logIt.js').logIt,
 	  functConf = require('../public/configOmron.js'),
 	  omronFunctions = require('./omronfunctions.js');
 
@@ -37,7 +37,7 @@ const rand = (max, min) => Math.floor(Math.random() * (Math.floor(max)-(Math.cei
 let blink = false;
 
 let controlRandCnt = 0;
-let controlRandCntLim = 2;
+let controlRandCntLim = 4;
 
 let multiColorFunctionInc = 0;
 let multiColorFunction = len => multiColorFunctionInc == len-1 ? multiColorFunctionInc = 0 : multiColorFunctionInc++;
@@ -54,12 +54,13 @@ function translate2serial (output1) {
 
 	let computedArrayLen = 1;
 	let noData = 0;
-	logIt('output1 =',output1)
+	logIt('output1 =',output1);
+
 	for(let i = 0; i < Object.keys(omronFunctions).length; i++){
 		if ((output1[0] & 1 << i) != 0) {
 			computedArrayLen = functConf[omronFunctions[i]].length;
 			computedArrayLen == 1 ? multiColorFunctionInc = 0 : multiColorFunctionInc;
-			outputArray = functConf[omronFunctions[i]]
+			outputArray = functConf[omronFunctions[i]];
 			
 			output2 = outputArray[multiColorFunctionInc];
 			logIt(`outputArray = ${JSON.stringify(outputArray)}`);
@@ -76,7 +77,7 @@ function translate2serial (output1) {
 	}
 
 	if(output1[0] == 1){
-		blink ?	outData = `0, 0, 0\n` : outData = `${output2[0]}, ${output2[1]}, ${output2[2]}\n`
+		blink ?	outData = `0, 0, 0\n` : outData = `${output2[0]}, ${output2[1]}, ${output2[2]}\n`;
 	}
 	else if (output1[0] === 0) {
 		if (controlRandCnt == 0) {
@@ -87,7 +88,8 @@ function translate2serial (output1) {
 		outData = `${output2[0]}, ${output2[1]}, ${output2[2]}\n`; 
 	}
 
-	sPort.write(outData, (err) => err ? console.log('Port Write Error: ', err.message): "")
+	sPort.write(outData, (err) => err ? console.log('Port Write Error: ', err.message): "");
+
 	blink = !blink;
 
 	controlRandCnt++;
@@ -98,4 +100,4 @@ function translate2serial (output1) {
 }
 
 
-module.exports = translate2serial
+module.exports = translate2serial;

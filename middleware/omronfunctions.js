@@ -14,4 +14,4 @@ let omronFunctions = {
 	'12': 'spotfree',
 }
 
-module.exports = omronFunctions
+module.exports = omronFunctions;

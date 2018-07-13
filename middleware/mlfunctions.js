@@ -19,4 +19,4 @@ let mlFunctions = {
 	'17': 'chem7',
 }
 
-module.exports = mlFunctions
+module.exports = mlFunctions;

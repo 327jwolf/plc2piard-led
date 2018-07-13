@@ -15,4 +15,4 @@ let functConf = {
 	'spotfree': [[23,123,134]],
 }
 
-module.exports = functConf
+module.exports = functConf;

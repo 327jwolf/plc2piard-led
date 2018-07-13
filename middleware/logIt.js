@@ -1,5 +1,5 @@
 
-function logIt(){
+exports.logIt = (...arguments) => {
 	let dev = true;
 	if (dev) {
 		if (console) {
@@ -8,4 +8,3 @@ function logIt(){
 	}
 }
 
-module.exports = logIt;
