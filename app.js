@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 const express = require('express'),
 	path = require('path'),
 	logger = require('morgan'),
