@@ -1,0 +1,17 @@
+.cards
+	-for(let i = 0; i < allData.length; i++)
+		.card-main
+			.card-header
+				span
+					p #{allData[i].plcFunction}
+					button.card-collapse &#9660;
+			.card-div 
+				ul.card-list 
+					-for(item in allData[i])
+						if (item != "_schema")
+							//label(for=`${item}`) `${(item).toUpperCase()}:`
+							li.list-item(class=`${item}`, id=`${item}`, data-key=`${item}`)=  `${allData[i][item]}`
+				if editBtns				
+					button.edit(id=`edit-Btn`, data-key=`${allData[i]._id}`) edit
+				//- if editBtns
+					button.delete(id=`del-Btn` data-key=`${allData[i]._id}`) del

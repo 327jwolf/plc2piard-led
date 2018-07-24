@@ -1,0 +1,32 @@
+//- includes/table.jade
+
+.mainTable
+	table
+		thead
+			tr
+				-for(item in allData[0])
+					if (item != "_schema")
+						th(id=`${item}`)= item
+				th
+				th
+			tr
+				-for(item in allData[0])
+					if (item != "_schema")
+						th(id=`${item}`)
+							input(id=`${item}`, type='search')
+				th
+				th
+
+		tbody
+			-for(let i = 0; i < allData.length; i++)
+				tr.tblRow1 
+					-for(item in allData[i])
+						if (item != "_schema")
+							td.dataCells(class=`${item}`, id=`${item}`, data-key=`${allData[i]._id}`)= `${allData[i][item]}`
+					if editBtns				
+						td 
+							button.edit(id=`edit-Btn`, data-key=`${allData[i]._id}`) edit
+					if editBtns
+						td 
+							button.delete(id=`del-Btn` data-key=`${allData[i]._id}`) del
+

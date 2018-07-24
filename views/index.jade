@@ -1,6 +1,101 @@
+
 extends layout
 
 block content
-  h1= title
-  p Welcome to #{title}
-  d #{data}
+
+	.main-title
+		h1= title
+		//- p= cachebust
+	.form-div
+		form(method='POST' id='data-entry' action='/newEntry')
+			.addrInfo
+				div.form-group(tooltip="ID must be unique. ")
+					label(for='_id') ID:
+					input#_id.form-control(type='text', placeholder='ID Number', name='_id', value=_id, required)
+				div.form-group
+					label(for='plcFunction') PLC Function:
+					input#plcFunction.form-control(type='text', placeholder='PLC Function', name='plcFunction', value=plcFunction, required)
+				div.form-group
+					label(for='outputType') Output Type:
+					input#outputType.form-control(type='text', placeholder='Output Type', name='outputType', value=outputType, required)
+				div.form-group
+					label(for='timing') Timing:
+					input#timing.form-control(type='text', placeholder='Location Name', name='timing', value=timing, required)
+				div.form-group(id="colorGroup")
+					
+					.colorDiv
+						//- button.btn.addColor(type='button') Add Color
+						label(for='color1') Color:
+						
+						input#color1.form-control(type='color', placeholder='', name='color', value=color1, required)
+						
+						//- input#color2.form-control(type='color', placeholder='', name='color', value=color2)
+						
+						//- input#color3.form-control(type='color', placeholder='', name='color', value=color3)
+			hr
+			button.btn.btn-primary(type='submit') Submit
+	p= message
+	//-.result
+	//-	-for(let key in result)
+	//-		if (key != "_schema")
+	//-			p= `${key}: ${result[key]}`
+	
+	include ./includes/cards.jade
+	include ./includes/table.jade
+
+	.form-div.modal1
+		.modal-main2
+			.modal-header
+				p Edit this record!!!
+					input(type="button", id="closeBtn", class="button white-button", value="X")
+			.modal-content
+				form(method='POST' id='data-modify' action='/edit')
+					.addrInfo
+						div.form-group(tooltip="ID must be unique. ")
+							label(for='_id') ID:
+							input#_id.form-control(type='text', placeholder='ID Number', name='_id', value=_id, required)
+						div.form-group
+							label(for='plcFunction') PLC Function:
+							input#plcFunction.form-control(type='text', placeholder='PLC Function', name='plcFunction', value=plcFunction, required)
+						div.form-group
+							label(for='outputType') Output Type:
+							input#outputType.form-control(type='text', placeholder='Output Type', name='outputType', value=outputType, required)
+						div.form-group
+							label(for='timing') Timing:
+							input#timing.form-control(type='text', placeholder='Location Name', name='timing', value=timing, required)
+						div.form-group
+							label(for='color1') Color:
+							button.btn.addColor(type='button') Add Color
+							.colors(id="colors")
+
+								//- input#color1.form-control(type='color', placeholder='', name='color', value=color1, required)
+								
+								//- input#color2.form-control(type='color', placeholder='', name='color', value=color2)
+								
+								//- input#color3.form-control(type='color', placeholder='', name='color', value=color3)
+					hr
+					button.btn.btn-primary(type='submit') Submit
+	.form-div.modal2
+		.modal-main2
+			.modal-header
+				p Are you sure you want to delete this record?
+					input(type="button", id="closeBtn1", class="button white-button", value="X" )
+			.modal-content
+				form(method='POST' id='data-delete' action='/del')
+					.addrInfo
+						div.form-group
+							label(for='id') ID:
+							input#_id.form-control(type='text', placeholder='ID ', name='_id', value=_id, required)
+						//-div.form-group
+							//-label(for='jobNo') Job Number:
+							//-input#id.form-control(type='text', placeholder='_id', name='_id', value=jobNo, required)
+
+					hr
+					button.btn.btn-primary(type='submit') Submit
+	script(src= '/javascripts/site.js')
+	script(src= '/javascripts/modals.js')
+	script(src= '/javascripts/filters.js')
+	
+
+
+

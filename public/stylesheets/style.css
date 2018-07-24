@@ -1,17 +1,28 @@
 body {
   padding: 20px;
-  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+  font: 20px "Lucida Grande", Helvetica, Arial, sans-serif;
   color: rgb(101, 97, 102);
   background: #ddd;
   margin: auto;
 }
 
 .body-div{
+  width: 100%;
   margin: auto;
 }
 
+
+@media only screen and (min-width: 600px) {
+  .body-div{
+    width: 100%;
+    margin: auto;
+  }
+
+}
+
+
 .nav {
-  display: block;
+  display: none;
   width: 100%;
   min-width: 700px;
   /*height: 30px;*/
@@ -24,25 +35,6 @@ body {
   width: 100%;
   height: 100%;
   min-width: 700px;
-}
-
-.iframeRL {
-  display: inline-block;
-  float: right;
-  margin-left: 40px;
-}
-
-.rlIframe{
-  width: 400px;
-  height: 350px;
-  /*height: 346px;*/
-  /*overflow: hidden;*/
-}
-
-.i5Frame{
-  width: 880px;
-  height: 700px;
-  /*overflow: hidden;*/
 }
 
 .nav-btn {
@@ -72,11 +64,17 @@ body {
   color: #fff;
 }
 
+.main-title {
+  width: 100%;
+  margin: auto;
+}
+
 #footer {
   display: block;
   width: 100%;
   padding: 5px;
   margin-top: 5px;
+  margin: auto;
   position: sticky;
   position: -webkit-sticky;
   bottom: 0;
@@ -110,17 +108,17 @@ thead th {
 }
 
 .mainTable tbody td {
-  text-align: left;
+  text-align: left;low
   padding: 6px;
   padding-left: 15px;
   border: 0;
 }
 
 .mainTable #_id {
-  display: none;
+  display: block;
 }
 
-.csvData td, .csvData th{
+td, th{
   text-align: center;
   padding: 5px 2px 5px 2px;
   /*white-space: nowrap;*/
@@ -129,7 +127,7 @@ thead th {
   white-space: nowrap;
 }
 
-.csvData tr td:first-child {
+tr td:first-child {
   text-align: left;
 }
 
@@ -140,17 +138,17 @@ thead th {
   }
 
 
-#main {
-  display: block;
+.mainTable {
+  display: none;
 }
 
 .form-div {
-  display: block;
-  width: 500px;
+  display: none;
+  width: 100%;
   padding: 10px;
   background: #ccc;
   border: 1px solid #555;
-  margin: 0;
+  margin: auto;
   white-space: normal;
   /*overflow: auto;*/
 }
@@ -161,11 +159,11 @@ form{
 
 }
 
-.addrInfo,
-.locationInfo {
+/*._id,
+.plcFunction {
   display: block;
   width: 100%;
-}
+}*/
 
 
 .form-group {
@@ -188,11 +186,20 @@ form{
   padding-left: 5px;
 }
 
+.form-group .colors input{
+  display: inline-block;
+  width: 150px;
+  padding: 1px;
+  margin-right: 5px;
+}
+
 .form-group input[type="radio" i]{
   width: 20px;
   margin-left: 10px;
   padding-left: 5px;
 }
+
+
 
 .form-textarea{
   display: block;
@@ -200,20 +207,19 @@ form{
   padding-top: 10px;
   margin: 10px;
 }
-.notes{
-  width: 95%;
-}
+
 .form-radio label,
 .form-textarea label,
 .form-group label{
   display: block;
   float: left;
   margin-top: -18px;
+  margin-bottom: 10px;
   /*background: #F3F3F3;*/
   height: 12px;
-  padding: 3px 5px 3px 5px;
-  color: #FFF;
-  font-size: 12px;
+  padding: 5px 5px 5px 5px;
+  color: #666;
+  font-size: 16px;
   white-space: nowrap;
   overflow: hidden;
 }
@@ -226,6 +232,13 @@ form{
 .btn {
   display: inline;
   margin-left: 10px;
+}
+
+.addColor {
+  display: inline;
+  margin-left: 0px;
+  margin-bottom: 2px;
+  font-size: 16px;
 }
 
 .modal {
@@ -265,6 +278,10 @@ form{
   background-color: rgba(0,0,0,0.5);
 }
 
+.removeColor {
+ 
+}
+
 .modal2 {
   display: none;
   position: fixed;
@@ -282,8 +299,8 @@ form{
   display: block;
   background-color:#f4f4f4;
   margin: 2% auto ;
-  width: 1050px;
-  min-width: 40%;
+  width: 100%;
+  /*min-width: 10%;*/
   box-shadow: 0 5px 8px 0 rgba(0,0,0,0.2),0 7px 20px 0 rgba(0,0,0,0.17);
   animation-name:modalopen;
   animation-duration:2s;
@@ -294,8 +311,8 @@ form{
   display: block;
   background-color:#f4f4f4;
   margin: 2% auto ;
-  width: 800px;
-  min-width: 40%;
+  width: 100%;
+  min-width: 10%;
   box-shadow: 0 5px 8px 0 rgba(0,0,0,0.2),0 7px 20px 0 rgba(0,0,0,0.17);
   animation-name:modalopen;
   animation-duration:2s;
@@ -399,11 +416,95 @@ form{
   
 }
 
+.list-item._id {
+  display: none;
+}
+
+.cards {
+  display: block;
+  width: 100%;
+  padding-bottom: 20px;
+  margin: auto;
+}
+
+.card-main {
+  display: block;
+  /*width: 350px;*/
+  background: #ccc;
+  border: 1px solid #555;
+  margin-bottom: 5px;
+  white-space: normal;
+  /*overflow: auto;*/
+}
+
+.card-header {
+  display: block;
+  /*width: 100%;*/
+  padding-top: 2px;
+  padding-bottom: 2px;
+  border-bottom: 1px solid #555;
+  color: #FFF;
+  background-color: #c0c0c0;
+}
+
+.card-header span {
+
+  display: inline-block;
+  width: 95%;
+  color: #FFF;
+  padding: 5px;
+  margin: auto;
+}
+
+.card-header p {
+
+  display: inline-block;
+  width: 80%;
+  color: #FFF;
+  padding: 5px;
+  margin: auto;
+}
+
+.card-collapse {
+
+  display: inline-block;
+
+}
+
+.cards.edit, .cards.delete {
+  display: block;
+  padding-bottom: 10px;
+  
+  
+}
+
+.cards .edit {
+  margin-bottom: 5px;
+}
+
+
+.card-div {
+  display: none;
+  white-space: normal;
+  /*overflow: auto;*/
+}
+
+.card-div ul {
+  list-style-type: none;
+}
+
+.btn-primary:hover,
 .delete:hover,
 .edit:hover {
   background-color: #666;
   color: #fff;
 }
+
+.card-div button.edit,
+.btn-primary {
+  font-size: 18px;
+}
+
 
 .hidden{
   display: none;

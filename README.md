@@ -7,7 +7,7 @@ I wanted to control the LED strips from a PLC, without using a DMX programmer or
 
 The RPi would also allow the user to set the color schemes through a Web Interface. 
 
-All programming in the RPi  would done with Node.js and javascript. The Arduino wold, of course, use the Arduino IDE and a sketch.
+All programming in the RPi  would done with Node.js and javascript. The Arduino would, of course, use the Arduino IDE and a sketch.
 
 ## Parts List
 

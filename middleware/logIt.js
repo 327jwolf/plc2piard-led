@@ -1,6 +1,6 @@
 
 exports.logIt = (...arguments) => {
-	let dev = true;
+	let dev = false;
 	if (dev) {
 		if (console) {
 			console.log.apply(console, arguments);

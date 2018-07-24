@@ -32,8 +32,8 @@ function getOmronInfo (cb) {
 	})
 
 	client.on('timeout',function(error) {
-	  console.log(`Timeout Client: ${getTimestamp()} - ${error}`);
-	  logToFile(`Timeout Client: ${getTimestamp()} - ${error}`);
+	  //console.log(`Timeout Client: ${getTimestamp()} - ${error}`);
+	  //logToFile(`Timeout Client: ${getTimestamp()} - ${error}`);
 	  cb([0]);
 	  client.close();
 	})
