@@ -58,7 +58,7 @@ module.exports.getDBdata = function(plcFun, cb){
             console.log(`The ERROR ${e}`)
             cb(e, null)
         })
-    }, 200)
+    }, 50)
 }
 
     

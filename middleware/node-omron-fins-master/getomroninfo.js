@@ -13,7 +13,7 @@ function getTimestamp() {
 	return localDate;
 }
 
-function getOmronInfo (cb) {
+exports.getOmronInfo = function  (cb) {
 	const config = {
 		ip_address: ips.Galena,
 		port: 9600
@@ -72,4 +72,50 @@ function getOmronInfo (cb) {
 	})
 }
 
-module.exports = getOmronInfo;
+exports.writeOmron = function (val, cb) {
+	const config = {
+		ip_address: ips.Galena,
+		port: 9600
+		}
+
+	const client = fins.FinsClient(config.port,config.ip_address, {
+		timeout: 2000
+	});
+
+
+	client.on('error',function(error) {
+	  console.log(`Error Client: ${getTimestamp()} - ${error}`);
+	  logToFile(`Error Client: ${getTimestamp()} - ${error}`);
+	  cb(null, error)
+	  client.close();
+	})
+
+	client.on('timeout',function(error) {
+	  console.log(`Timeout Client: ${getTimestamp()} - ${error}`);
+	  logToFile(`Timeout Client: ${getTimestamp()} - ${error}`);
+	  cb(null, error)
+	  client.close();
+	})
+
+
+	let addresses = [
+	['H60', 1]
+	];
+
+	addresses.map(x => {
+		client.write(x[0], val)
+	})
+
+	client.on('reply',function(msg) {
+		logIt(getTimestamp());
+		logIt("Reply from: ", msg.remotehost);
+		logIt("Replying to issued command of: ", msg.command);
+		logIt("Response code of: ", msg.response);
+		logIt("C1Data returned: ", msg.values);
+		logIt("SID: ", msg.sid, '\n');
+		cb(msg.values, null);
+		client.close();
+	})
+}
+
+//module.exports = getOmronInfo;

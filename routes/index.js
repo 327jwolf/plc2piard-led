@@ -9,6 +9,7 @@ const path = require('path');
 const fs = require('fs')
 //const fsPromise = Promise.promisifyAll(fs)
 
+const writeOmron = require('../middleware/node-omron-fins-master/getomroninfo.js').writeOmron;
 
 
 /* GET home page. */
@@ -25,6 +26,20 @@ router.get('/', function (req, res, next) {
 		});
 	})
 })
+
+router.post('/pdata', function(req, res, next) {
+	writeOmron(parseInt(req.body.d, 10), (val, err)=>{
+		if (err) {
+			console.log("Write Error ", err)
+		}
+		if (val) {
+			console.log(val)
+		}
+	})
+	res.sendStatus(200);
+	
+});
+
 
 router.post('/newEntry', function(req, res, next) {
 

@@ -12,7 +12,7 @@ const server = require('http').createServer(app);
 const nodepccc = require('nodepccc'),
 	getPLCInfo = require('./middleware/getPLCInfo.js'),
 	logIt = require('./middleware/logIt.js'),
-	getOmronInfo = require('./middleware/node-omron-fins-master/getomroninfo.js'),
+	getOmronInfo = require('./middleware/node-omron-fins-master/getomroninfo.js').getOmronInfo,
 	translate2serial = require('./middleware/translate2serial.js'),
 	index = require('./routes/index');
 	port = process.argv[2] || 3030;
@@ -24,7 +24,7 @@ server.listen(port);
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
 
-app.set('env', 'prod');
+app.set('env', 'dev');
 
 // uncomment after placing your favicon in /public
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));

@@ -11,7 +11,7 @@
 						if (item != "_schema")
 							//label(for=`${item}`) `${(item).toUpperCase()}:`
 							li.list-item(class=`${item}`, id=`${item}`, data-key=`${item}`)=  `${allData[i][item]}`
-				if editBtns				
-					button.edit(id=`edit-Btn`, data-key=`${allData[i]._id}`) edit
+				button.edit(id=`edit-Btn`, data-key=`${allData[i]._id}`) edit
+				button.test-color(id=`test-color${allData[i]._id}`, data-key=`${allData[i]._id}`) test
 				//- if editBtns
 					button.delete(id=`del-Btn` data-key=`${allData[i]._id}`) del

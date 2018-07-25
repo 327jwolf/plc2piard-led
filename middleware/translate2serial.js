@@ -10,7 +10,7 @@ function fixString2Array (arg) {
     return typeof arg == 'string' ? [arg] : JSON.parse(`[${arg}]`)
 }
 
-let newColor;
+let newColor = ['0,0,0'];
 
 //setTimeout(function(){
 //}, 5000)
@@ -38,7 +38,7 @@ function getDelayedData (f) {
     })
 }
 
-getDelayedData("df")
+//getDelayedData("df")
 
 
 let Readline = SerialPort.parsers.Readline;

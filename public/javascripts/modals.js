@@ -11,6 +11,22 @@ domIsReady(function() {
 	let colorGroup = document.querySelector('#colorGroup')
 	let colorIndex = 1;
 
+	const postAjax = (url, data, success) => {
+		var params = typeof data == 'string' ? data : Object.keys(data).map(
+            function(k){ return encodeURIComponent(k) + '=' + encodeURIComponent(data[k]) }
+	        ).join('&');
+
+	    var xhr = window.XMLHttpRequest ? new XMLHttpRequest() : new ActiveXObject("Microsoft.XMLHTTP");
+	    xhr.open('POST', url);
+	    xhr.onreadystatechange = function() {
+	        if (xhr.readyState>3 && xhr.status==200) { success(xhr.responseText); }
+	    };
+	    xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+	    xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+	    xhr.send(params);
+	    return xhr;
+	}
+
 	// Removes modal
 	const closeModal = (e) => {
 	    modal1.style.display = 'none';
@@ -72,7 +88,7 @@ domIsReady(function() {
 		
 	const openModal1 = (e) => {
 		let targetRow;
-		console.log(e.target.parentNode.nodeName.toLowerCase(), e.target.parentNode.nodeName.toLowerCase() === 'td')
+		//console.log(e.target.parentNode.nodeName.toLowerCase(), e.target.parentNode.nodeName.toLowerCase() === 'td')
 		if (e.target.parentNode.nodeName.toLowerCase() === 'td') {
 			targetRow =  e.target.parentElement.parentElement
 			console.log(targetRow)
@@ -80,7 +96,7 @@ domIsReady(function() {
 			let tableMain = document.querySelector('.mainTable tbody')
 			idBtn = e.target.getAttribute('data-key')
 			targetRow = tableMain.querySelector(`[data-key='${idBtn}']`).parentElement
-			console.log(tableMain.querySelector(`[data-key='${idBtn}']`).parentElement)
+			//console.log(tableMain.querySelector(`[data-key='${idBtn}']`).parentElement)
 		}
 		//let targetRow =  e.target.parentElement.parentElement
 		let idVal = targetRow.querySelector('._id').textContent
@@ -152,8 +168,7 @@ domIsReady(function() {
 		modal2.style.display = 'block'
 	}
 	
-	
-	window.addEventListener('click', outsideClick)	
+	window.addEventListener('click', outsideClick)
 
 	let closeBtn = document.getElementById('closeBtn')
 	let closeBtn1 = document.getElementById('closeBtn1')
@@ -181,6 +196,7 @@ domIsReady(function() {
 		})
 	}
 
+	
 	let cardCollapse = document.querySelectorAll('.card-collapse')
 	let cardDiv = document.querySelectorAll('.card-div')
 
@@ -202,14 +218,29 @@ domIsReady(function() {
 		})
 	}
 
-	// $('.labelTitle > p').click(function(e) {
-	// 	if($(this).parent().children('.dataFields').css('display') == 'none'){ 
-	// 		   $(this).parent().children('.dataFields').show('300');
-	// 		   $(this).children('.downBtn').html('&#9650;')
-	// 		} else { 
-	// 		   $(this).parent().children('.dataFields').hide('300');
-	// 		   $(this).children('.downBtn').html('&#9660;');
-	// 		}
-	// })
+	let testColor = document.querySelectorAll('.test-color')
+
+	const handleTest = (e) => {
+		let dataToSend = 2**(e.target.getAttribute('data-key')-1)
+		if (e.target.style.backgroundColor == "red") {
+			postAjax('http://192.168.1.193:3030/pdata', `d=0`, function(data){ console.log(data); });
+			e.target.style.backgroundColor = "white"
+		} else {
+			postAjax('http://192.168.1.193:3030/pdata', `d=${dataToSend}`, function(data){ console.log(data); });
+			e.target.style.backgroundColor = "red"
+		}
+		// console.log(e.target.getAttribute('data-key'), dataToSend.toString(2))
+	}
+
+	if (testColor) {
+		Array.from(testColor).map((x, index) => {
+			if (index >= 0) {
+				x.addEventListener('click', handleTest)
+			}
+		})
+	}
+
+	
 })
+
 
