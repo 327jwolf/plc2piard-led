@@ -26,6 +26,10 @@ function hextorgb (hex) {
 function getDelayedData (f) {
 
     return leddata.getDBdata(f, (e, data) => {
+        if (e) {
+            console.log('GetDBData Error: ', e)
+            return
+        }
         let fColor = typeof data.color == 'string' 
         ? [hextorgb(data.color)] 
         : data.color.map(x => {
