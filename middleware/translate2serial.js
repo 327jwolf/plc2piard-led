@@ -130,6 +130,7 @@ function translate2serial (output1) {
         blink ? outData = `0, 0, 0\n` : outData = `${output2[0]}, ${output2[1]}, ${output2[2]}\n`;
     }
     else if (output1[0] === 0) {
+        newColor[0] = [0,0,0];
         if (controlRandCnt == 0) {
             blink ? outData = `0, 0, 0\n` : outData = `${rand(randMax, 0)}, ${rand(randMax, 0)}, ${rand(randMax, 0)}\n`;
         }

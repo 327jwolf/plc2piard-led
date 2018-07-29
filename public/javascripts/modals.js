@@ -2,6 +2,8 @@
 
 domIsReady(function() {
 
+	let serverLocation = window.location.hostname
+	//console.log(serverLocation)
  	let editrecord = document.querySelectorAll('.edit')
 	let delrecord = document.querySelectorAll('.delete')
 	let modal1 = document.querySelector('.modal1')
@@ -197,20 +199,20 @@ domIsReady(function() {
 	}
 
 	
-	let cardCollapse = document.querySelectorAll('.card-collapse')
-	let cardDiv = document.querySelectorAll('.card-div')
+	let cardHeader = document.querySelectorAll('.card-header')
 
-	if (cardCollapse) {
-		Array.from(cardCollapse).map((x, index) => {
+	if (cardHeader) {
+		Array.from(cardHeader).map((x, index) => {
 			if (index >= 0) {
 				x.addEventListener('click', function(e){
 					let card = e.target.parentElement.parentElement.parentElement
+					console.log(card)
 					if (card.querySelector('.card-div').style.display == 'block'){
 						card.querySelector('.card-div').style.display = 'none'
-						e.target.innerHTML = '&#9660';
+						card.querySelector('.card-collapse').innerHTML = '&#9660';
 					} else {
 						card.querySelector('.card-div').style.display = 'block'
-						e.target.innerHTML = '&#9650';
+						card.querySelector('.card-collapse').innerHTML = '&#9650';
 					}
 
 				})
@@ -223,10 +225,10 @@ domIsReady(function() {
 	const handleTest = (e) => {
 		let dataToSend = 2**(e.target.getAttribute('data-key')-1)
 		if (e.target.style.backgroundColor == "red") {
-			postAjax('http://192.168.1.193:3030/pdata', `d=0`, function(data){ console.log(data); });
+			postAjax(`http://${serverLocation}:3030/pdata`, `d=0`, function(data){ console.log(data); });
 			e.target.style.backgroundColor = "white"
 		} else {
-			postAjax('http://192.168.1.193:3030/pdata', `d=${dataToSend}`, function(data){ console.log(data); });
+			postAjax(`http://${serverLocation}:3030/pdata`, `d=${dataToSend}`, function(data){ console.log(data); });
 			e.target.style.backgroundColor = "red"
 		}
 		// console.log(e.target.getAttribute('data-key'), dataToSend.toString(2))
