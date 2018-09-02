@@ -44,10 +44,45 @@ function getDelayedData (f) {
 
 //getDelayedData("df")
 
+(function getConnectedArduino() {
+  SerialPort.list(function(err, ports) {
+    var allports = ports.length;
+    var count = 0;
+    var done = false
+    //console.log(ports)
+    ports.forEach(function(port) {
+      count += 1;
+      pm = port['manufacturer'];
+
+      if (typeof pm !== 'undefined' && pm.includes('1a86')) { // || 'arduino'
+        arduinoport = port.comName.toString();
+        console.log(arduinoport)
+        //var serialPort = require('serialport');
+        // sPort = new SerialPort(arduinoport, {
+        //   buadRate: 9600
+        // })
+        // sPort.on('open', function() {
+        //   console.log('done! arduino is now connected at port: ' + arduinoport)
+        // })
+        done = true;
+      }
+      if (count === allports && done === false) {
+         console.log('cant find arduino')
+      }
+    });
+
+  });
+})()
+
+
+
+
 
 let Readline = SerialPort.parsers.Readline;
-//test
-const sPort = new SerialPort("/dev/ttyACM0", 
+
+let nano = "/dev/ttyUSB0"
+let uno = "/dev/ttyACM0"
+const sPort = new SerialPort(nano, // "/dev/ttyACM0" /dev/ttyUSB0
         {
             baudRate: 9600,
         }
@@ -92,10 +127,6 @@ let randMax = 25;
 function translate2serial (output1) {
 
     output1 == undefined ? output1 = [0] : output1;
-
-    if (!sPort.isOpen) {
-        sPort.open()
-    }
 
     let computedArrayLen = 1;
     let noData = 0;
@@ -143,7 +174,14 @@ function translate2serial (output1) {
         outData = `${output2[0]}, ${output2[1]}, ${output2[2]}\n`; 
     }
 
+    if (!sPort.isOpen) {
+        sPort.open()
+    }
+
+
     sPort.write(outData, (err) => err ? console.log('Port Write Error: ', err.message): "");
+
+    
 
     blink = !blink;
 
