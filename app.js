@@ -4,7 +4,9 @@ const express = require('express'),
 	path = require('path'),
 	logger = require('morgan'),
 	cookieParser = require('cookie-parser'),
-	bodyParser = require('body-parser');
+	bodyParser = require('body-parser'),
+	config = require('./config/appconfig.js').sysconfig,
+	confPLC = require('./config/appconfig.js').configPLC;
 
 const app = express();
 const server = require('http').createServer(app);
@@ -14,7 +16,7 @@ const nodepccc = require('nodepccc'),
 	logIt = require('./middleware/logIt.js'),
 	getOmronInfo = require('./middleware/node-omron-fins-master/getomroninfo.js').getOmronInfo,
 	translate2serial = require('./middleware/translate2serial.js'),
-	index = require('./routes/index');
+	index = require('./routes/index'),
 	port = process.argv[2] || 3030;
 
 //app.use(express.static('public'));
@@ -22,7 +24,7 @@ server.listen(port);
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'jade');
+app.set('view engine', 'pug');
 
 app.set('env', 'dev');
 
@@ -65,18 +67,19 @@ console.log("Express server running nodepccc at\n  => http://localhost:" + port 
 //************************************************
 
 let plcType = "Omron";//"Omron" "microLogix"
-let intervalTime = 750;
+let intervalTime = config.callInterval;
 
 //************************************************
-if (plcType == "Omron") {
+if (config.machineType == "Omron") {
 	
 	setInterval(() => getOmronInfo(translate2serial), intervalTime);
 }
 
 //************************************************
 
-if (plcType == "microLogix") {
-	
-	setInterval(() => getPLCInfo('read', configPLC.plcAddr, 0, translate2serial), intervalTime);
+if (config.machineType == "ML") {
+	//getPLCInfo('read', confPLC, 0, translate2serial)
+	setInterval(() => getPLCInfo('read', confPLC, 0, translate2serial), intervalTime);
+	// getPLCInfo('write', confPLC, [0, 22], null)
 }
 

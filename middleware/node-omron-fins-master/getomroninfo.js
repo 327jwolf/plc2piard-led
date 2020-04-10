@@ -1,8 +1,8 @@
 const fins = require('./lib/index'),
-	  ips = require('../../middleware/ips.config'),
 	  logIt = require('../logIt.js').logIt,
 	  logToFile = require('../logToFile.js').logToFile;
 
+const config = require('../../config/appconfig.js').configPLC;
 let cnt1 = 0;
 let msgID1 = function() {
 	    return cnt1 = (cnt1 % 254) + 1;
@@ -14,12 +14,9 @@ function getTimestamp() {
 }
 
 exports.getOmronInfo = function  (cb) {
-	const config = {
-		ip_address: ips.Galena,
-		port: 9600
-		}
 
-	const client = fins.FinsClient(config.port,config.ip_address, {
+
+	const client = fins.FinsClient(config.port,config.plcHost, {
 		timeout: 2000
 	});
 
@@ -73,12 +70,8 @@ exports.getOmronInfo = function  (cb) {
 }
 
 exports.writeOmron = function (val, cb) {
-	const config = {
-		ip_address: ips.Galena,
-		port: 9600
-		}
 
-	const client = fins.FinsClient(config.port,config.ip_address, {
+	const client = fins.FinsClient(config.port,config.plcHost, {
 		timeout: 2000
 	});
 

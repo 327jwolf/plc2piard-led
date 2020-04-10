@@ -1,19 +1,23 @@
 const SerialPort = require("serialport"),
-      logIt = require('./logIt.js').logIt,
-      functConf = require('../public/configOmron.js'),
-      omronFunctions = require('./omronfunctions.js'),
-      path = require('path');
-      
-const leddata = require('../models/leddataschema.js');
+    logIt = require('./logIt.js').logIt,
+    leddata = require('../models/leddataschema.js'),
+    path = require('path');
+const config = require('../config/appconfig.js').sysconfig;
+
+//************************************************
+if (config.machineType == "Omron") {
+	plcFunctions = require('./omronfunctions.js');
+}
+//************************************************
+if (config.machineType == "ML") {
+	plcFunctions = require('./mlfunctions.js');
+}
 
 function fixString2Array (arg) {
     return typeof arg == 'string' ? [arg] : JSON.parse(`[${arg}]`)
 }
 
 let newColor = ['0,0,0'];
-
-//setTimeout(function(){
-//}, 5000)
 
 function hextorgb (hex) {
     let color = parseInt(hex.slice(1,7), 16)
@@ -24,7 +28,7 @@ function hextorgb (hex) {
 }
 
 function getDelayedData (f) {
-
+    
     return leddata.getDBdata(f, (e, data) => {
         if (e) {
             console.log('GetDBData Error: ', e)
@@ -35,46 +39,35 @@ function getDelayedData (f) {
         : data.color.map(x => {
             return hextorgb(x)
         })  
-        
         newColor = [fColor, data.plcFunction, data.outputType, data.timing]
         //console.log(newColor, data.color)
-
     })
 }
 
-//getDelayedData("df")
-
 (function getConnectedArduino() {
-  SerialPort.list(function(err, ports) {
-    var allports = ports.length;
-    var count = 0;
-    var done = false
-    //console.log(ports)
-    ports.forEach(function(port) {
-      count += 1;
-      pm = port['manufacturer'];
+    SerialPort.list().then( ports =>  {
+        var allports = ports.length;
+        var count = 0;
+        var done = false
+        //console.log(ports)
+        ports.forEach(function(port) {
+            count += 1;
+            pm = port['manufacturer'];
+    
+            if (typeof pm !== 'undefined' && pm.includes('1a86')) { // || 'arduino'
+                arduinoport = port.path.toString();
+                console.log("arduino port info....", arduinoport)
 
-      if (typeof pm !== 'undefined' && pm.includes('1a86')) { // || 'arduino'
-        arduinoport = port.comName.toString();
-        console.log(arduinoport)
-        //var serialPort = require('serialport');
-        // sPort = new SerialPort(arduinoport, {
-        //   buadRate: 9600
-        // })
-        // sPort.on('open', function() {
-        //   console.log('done! arduino is now connected at port: ' + arduinoport)
-        // })
-        done = true;
-      }
-      if (count === allports && done === false) {
-         console.log('cant find arduino')
-      }
-    });
-
-  });
-})()
-
-
+                done = true;
+            }
+            if (count === allports && done === false) {
+            console.log('cant find arduino')
+            }
+        })
+      
+        },
+        err => console.log("tested port list error: ", err));
+  })()
 
 
 
@@ -103,14 +96,6 @@ sPort.on('open', function () {
 sPort.on('error', function (err) {
   console.log('Serial Port Error', err);
 })
-
-
-
-// let val = 0;
-// const colorCnt = function() {
-//     return val = (val % 254) + 1;
-// };
-
 const rand = (max, min) => Math.floor(Math.random() * (Math.floor(max)-(Math.ceil(min) + 1) + (Math.ceil(min))));
 
 let blink = false;
@@ -122,30 +107,23 @@ let multiColorFunctionInc = 0;
 let multiColorFunction = len => multiColorFunctionInc == len-1 ? multiColorFunctionInc = 0 : multiColorFunctionInc++;
 let outData = '';
 let output2 = {};
-let randMax = 25;
+let randMax = 100;
 
 function translate2serial (output1) {
 
     output1 == undefined ? output1 = [0] : output1;
-
     let computedArrayLen = 1;
     let noData = 0;
     logIt('output1 =',output1);
 
-    let dd;
-
-    for(let i = 0; i < Object.keys(omronFunctions).length; i++){
+    for(let i = 0; i < Object.keys(plcFunctions).length; i++){
+        // console.log(`Output1[0]=${output1[0]} and (output1[0] & 1 << i) = ${(output1[0] & 1 << i)}`)
         if ((output1[0] & 1 << i) != 0) {
 
-            getDelayedData(omronFunctions[i])
+            getDelayedData(plcFunctions[i])
             computedArrayLen = newColor[0].length;
             computedArrayLen == 1 ? multiColorFunctionInc = 0 : multiColorFunctionInc;
             outputArray = Array.from(newColor[0]);
-
-            // computedArrayLen = functConf[omronFunctions[i]].length;
-            // computedArrayLen == 1 ? multiColorFunctionInc = 0 : multiColorFunctionInc;
-            // outputArray = functConf[omronFunctions[i]];
-
 
             output2 = outputArray[multiColorFunctionInc];
             logIt(`outputArray = ${JSON.stringify(outputArray)}`);
@@ -179,7 +157,7 @@ function translate2serial (output1) {
     }
 
 
-    sPort.write(outData, (err) => err ? console.log('Port Write Error: ', err.message): "");
+    sPort.write(outData, (err) => err ? console.log('Port Write Error: ', err.message): "#####");
 
     
 
