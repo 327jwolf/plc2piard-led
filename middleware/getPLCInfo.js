@@ -20,7 +20,7 @@ function getPLCInfo(ftype, addr, wVal, cb){
 	this.addr = addr.plcAddr;
 	this.wVal = wVal;
 	this.cb = cb;
-	console.log("....args......", [ftype, addr.plcAddr, wVal, cb])
+	// console.log("....args......", [ftype, addr.plcAddr, wVal, cb])
 
 	/////////////////////////////////////////////////////////////////////////
 

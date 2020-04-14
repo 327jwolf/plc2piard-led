@@ -381,7 +381,7 @@ form{
 }
 
 .itemArea p {
-  display: inline;
+  display: inline-block;
   line-height: 1px;
   width: 100px;
   padding-left: 3px;
