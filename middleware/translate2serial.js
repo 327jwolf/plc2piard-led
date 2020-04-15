@@ -46,8 +46,8 @@ function getDelayedData (f) {
 
 
 let Readline = SerialPort.parsers.Readline;
-//test
-const sPort = new SerialPort("/dev/ttyACM0", 
+//test  /dev/ttyACM0
+const sPort = new SerialPort("/dev/ttyUSB0", 
         {
             baudRate: 9600,
         }
