@@ -46,6 +46,10 @@ void setup() {
   pinMode(9, OUTPUT);
   pinMode(10, OUTPUT);
   pinMode(11, OUTPUT);
+  pinMode(3, OUTPUT);
+  pinMode(5, OUTPUT);
+  pinMode(6, OUTPUT);
+  
   // turn on pin 13 to power the LEDs:
   pinMode(13, OUTPUT);
   digitalWrite(13, HIGH);
@@ -111,8 +115,11 @@ void loop() {
 //      blue = randNumber;
 //    }
     analogWrite(11, red);
+    analogWrite(3, red);
     analogWrite(9, green);
+    analogWrite(5, green);
     analogWrite(10, blue);
+    analogWrite(6, blue);
 
     // print the colors:
     Serial.print("Red: ");
@@ -135,9 +142,12 @@ void loop() {
     // save the last time you blinked the LED
     //previousMillis = currentMillis;
 
-    analogWrite(11, 0);
+    analogWrite(3, 0);
+    analogWrite(5, 0);
+    analogWrite(6, 0);
     analogWrite(9, 0);
     analogWrite(10, 0);
+    analogWrite(11, 0);
   } 
 
 }

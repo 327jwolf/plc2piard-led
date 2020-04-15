@@ -8,6 +8,7 @@ body {
 
 .body-div{
   width: 100%;
+  max-width: 400px;
   margin: auto;
 }
 
@@ -41,7 +42,7 @@ body {
   display: inline;
   margin: 5px;
   padding: 10px;
-  border-right: : 1px solid #000;
+  border-right: 1px solid #000;
 }
 
 .nav-link {
@@ -108,7 +109,7 @@ thead th {
 }
 
 .mainTable tbody td {
-  text-align: left;low
+  text-align: left;
   padding: 6px;
   padding-left: 15px;
   border: 0;
@@ -156,7 +157,6 @@ tr td:first-child {
 form{
   display: block;
   width: 100%;
-
 }
 
 /*._id,
@@ -381,7 +381,7 @@ form{
 }
 
 .itemArea p {
-  display: inline;
+  display: inline-block;
   line-height: 1px;
   width: 100px;
   padding-left: 3px;

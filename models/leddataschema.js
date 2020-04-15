@@ -32,6 +32,9 @@ class LedData extends Document {
 
 module.exports = LedData
 
+module.exports.getItAll = function(){
+     return LedData.find({}, {sort: '_id'})
+}
 
 module.exports.getAll = function(req, res, callback){
     
@@ -43,7 +46,7 @@ module.exports.getAll = function(req, res, callback){
         })
         .catch(e => {
         	console.log(`The ERROR ${e}`)
-        	return callback(e, nul)
+        	return callback(e, null)
     })
  
 }

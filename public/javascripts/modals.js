@@ -3,7 +3,7 @@
 domIsReady(function() {
 
 	let serverLocation = window.location.hostname
-	//console.log(serverLocation)
+	// console.log(serverLocation)
  	let editrecord = document.querySelectorAll('.edit')
 	let delrecord = document.querySelectorAll('.delete')
 	let modal1 = document.querySelector('.modal1')
@@ -16,8 +16,7 @@ domIsReady(function() {
 	const postAjax = (url, data, success) => {
 		var params = typeof data == 'string' ? data : Object.keys(data).map(
             function(k){ return encodeURIComponent(k) + '=' + encodeURIComponent(data[k]) }
-	        ).join('&');
-
+			).join('&');
 	    var xhr = window.XMLHttpRequest ? new XMLHttpRequest() : new ActiveXObject("Microsoft.XMLHTTP");
 	    xhr.open('POST', url);
 	    xhr.onreadystatechange = function() {
@@ -93,7 +92,7 @@ domIsReady(function() {
 		//console.log(e.target.parentNode.nodeName.toLowerCase(), e.target.parentNode.nodeName.toLowerCase() === 'td')
 		if (e.target.parentNode.nodeName.toLowerCase() === 'td') {
 			targetRow =  e.target.parentElement.parentElement
-			console.log(targetRow)
+			//console.log(targetRow)
 		} else {
 			let tableMain = document.querySelector('.mainTable tbody')
 			idBtn = e.target.getAttribute('data-key')
@@ -206,7 +205,7 @@ domIsReady(function() {
 			if (index >= 0) {
 				x.addEventListener('click', function(e){
 					let card = e.target.parentElement.parentElement.parentElement
-					console.log(card)
+					//console.log(card)
 					if (card.querySelector('.card-div').style.display == 'block'){
 						card.querySelector('.card-div').style.display = 'none'
 						card.querySelector('.card-collapse').innerHTML = '&#9660';
@@ -223,12 +222,16 @@ domIsReady(function() {
 	let testColor = document.querySelectorAll('.test-color')
 
 	const handleTest = (e) => {
-		let dataToSend = 2**(e.target.getAttribute('data-key')-1)
+		let dataToSend = 2**(parseInt(e.target.getAttribute('data-key'))-1)
 		if (e.target.style.backgroundColor == "red") {
-			postAjax(`http://${serverLocation}:3030/pdata`, `d=0`, function(data){ console.log(data); });
+			postAjax(`http://${serverLocation}:3030/pdata`, `d=0`, function(data){ 
+			//console.log(data); 
+			});
 			e.target.style.backgroundColor = "white"
 		} else {
-			postAjax(`http://${serverLocation}:3030/pdata`, `d=${dataToSend}`, function(data){ console.log(data); });
+			postAjax(`http://${serverLocation}:3030/pdata`, `d=${dataToSend}`, function(data){
+				// console.log(data); 
+			});
 			e.target.style.backgroundColor = "red"
 		}
 		// console.log(e.target.getAttribute('data-key'), dataToSend.toString(2))

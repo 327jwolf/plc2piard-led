@@ -8,18 +8,22 @@
   },
   "author": "327jwolf",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/327jwolf/plc2piard-led.git"
+  },
   "dependencies": {
-    "body-parser": "~1.18.2",
-    "btoa": "^1.1.2",
+    "body-parser": "~1.19.0",
+    "btoa": "^1.2.1",
     "camo": "^0.12.3",
-    "cookie-parser": "~1.4.3",
-    "debug": "~2.6.9",
-    "express": "^4.16.3",
-    "jade": "^1.11.0",
-    "morgan": "~1.9.0",
+    "cookie-parser": "~1.4.5",
+    "debug": "~4.1.1",
+    "express": "^4.17.1",
+    "morgan": "^1.10.0",
     "nedb": "^1.8.0",
-    "node-fetch": "^1.7.3",
-    "nodepccc": "^0.1.8",
-    "serialport": "^6.2.1"
+    "node-fetch": "^2.6.0",
+    "nodepccc": "^0.1.17",
+    "pug": "^2.0.4",
+    "serialport": "^8.0.7"
   }
 }

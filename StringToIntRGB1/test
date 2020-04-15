@@ -1,0 +1,25 @@
+{"_id":"1","plcFunction":"df","color":"#00ff00","outputType":"1","timing":"300"}
+{"_id":"10","plcFunction":"clearcoat","color":["#ffffff","#000000"],"outputType":"3","timing":"600"}
+{"_id":"11","plcFunction":"chem1","color":["#ffff00","#fc2203"],"outputType":"3","timing":"600"}
+{"_id":"12","plcFunction":"chem2","color":"#ff8000","outputType":"3","timing":"600"}
+{"_id":"13","plcFunction":"citywater","color":"#ddaba4","outputType":"3","timing":"600"}
+{"_id":"14","plcFunction":"spotfree","color":["#ffffff","#0dfbf4"],"outputType":"3","timing":"600"}
+{"_id":"15","plcFunction":"misc","color":"#00ff00","outputType":"3","timing":"600"}
+{"_id":"16","plcFunction":"misc2","color":["#80ff80","#0000ff"],"outputType":"3","timing":"600"}
+{"_id":"2","plcFunction":"bu","color":["#ff6400","#000000"],"outputType":"2","timing":"500"}
+{"_id":"3","plcFunction":"stop","color":"#ff0000","outputType":"3","timing":"600"}
+{"_id":"4","plcFunction":"presoak","color":"#ff0086","outputType":"1","timing":"300"}
+{"_id":"5","plcFunction":"tireCleaner","color":"#ffff00","outputType":"1","timing":"300"}
+{"_id":"6","plcFunction":"trifoam","color":["#ff00ff","#ff3c00","#0000ff"],"outputType":"3","timing":"600"}
+{"_id":"7","plcFunction":"foambath","color":["#ff8040","#ffff00"],"outputType":"3","timing":"600"}
+{"_id":"8","plcFunction":"highpressure","color":"#8080c0","outputType":"3","timing":"600"}
+{"_id":"9","plcFunction":"rockers","color":"#a3d2dc","outputType":"3","timing":"600"}
+
+0x00ff00 //df
+0xff0000 //stop
+0xff6400 //bu
+0xff0086 //ps
+0xffff00 //tc
+0xff00ff, 0xff3c00, 0x0000ff //tf
+0xff8040, 0xffff00 //fb
+0xffffff, 0x0dfbf4 //sf

@@ -1,5 +1,4 @@
 const nodepccc = require('nodepccc'),
-	confPLC = require('../middleware/configPLC'),
 	logIt = require('../middleware/logIt.js');
 
 function decimalToHexString(number){
@@ -10,17 +9,18 @@ function decimalToHexString(number){
 }
 
 function getPLCInfo(ftype, addr, wVal, cb){
-	let plcHost = confPLC.plcHost,
-		plcPort = confPLC.port,
+	let plcHost = addr.plcHost,
+		plcPort = addr.port,
 		conn = new nodepccc,
 		doneReading = false,
 		doneWriting = false,
 		data1,
 		sessId;
 	this.ftype = ftype;
-	this.addr = addr;
+	this.addr = addr.plcAddr;
 	this.wVal = wVal;
 	this.cb = cb;
+	// console.log("....args......", [ftype, addr.plcAddr, wVal, cb])
 
 	/////////////////////////////////////////////////////////////////////////
 
@@ -30,14 +30,14 @@ function getPLCInfo(ftype, addr, wVal, cb){
 
 	function connected(err) {
 		if (typeof(err) !== "undefined") {
-			console.log(err);
+			console.log("........", err);
 			process.exit();
 		}
 		//conn.addItems(['B3:0', 'B3:1']);//This Works
-		conn.addItems(addr); 
-		//conn.readAllItems(valuesReady);
-		if (ftype === 'read') {conn.readAllItems(valuesReady);};
-		if (ftype === 'write') {conn.writeItems(addr, wVal, valuesWritten);};
+		conn.addItems(addr.plcAddr); 
+		// conn.readAllItems(valuesReady);
+		if (ftype == 'read') {conn.readAllItems(valuesReady);};
+		if (ftype == 'write') {conn.writeItems(addr.plcAddr, wVal, valuesWritten);};
 
 	}
 
@@ -47,8 +47,8 @@ function getPLCInfo(ftype, addr, wVal, cb){
 		if (err) { console.log("SOMETHING WENT WRONG READING VALUES!!!!"); }
 
 		let data = [];
-		for (let i = 0; i < addr.length; i++) {
-			data.push(conn.findItem(addr[i]).value);
+		for (let i = 0; i < addr.plcAddr.length; i++) {
+			data.push(conn.findItem(addr.plcAddr[i]).value);
 		}
 		
 		doneReading = true;
@@ -56,7 +56,7 @@ function getPLCInfo(ftype, addr, wVal, cb){
 			sessId = decimalToHexString(conn.sessionHandle);
 			//console.log('--------------------' + sessId);
 			//logIt("Read data: %s --sessionHandle: %s--- Date: %s", data, sessId, Date());
-			conn.removeItems(addr);
+			conn.removeItems(addr.plcAddr);
 			conn.dropConnection();
 			return cb(data, sessId);
 		}
@@ -68,7 +68,7 @@ function getPLCInfo(ftype, addr, wVal, cb){
 		if (err) { console.log("SOMETHING WENT WRONG WRITING VALUES!!!!"); }
 		//logIt("Done writing.-- %s --. Date: %s.................", wVal, Date());
 		doneWriting = true;
-		conn.removeItems(addr);
+		conn.removeItems(addr.plcAddr);
 		conn.dropConnection();
 	}
 

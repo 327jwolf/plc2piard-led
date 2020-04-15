@@ -8,8 +8,19 @@ const path = require('path');
 //const Promise = require('bluebird')
 const fs = require('fs')
 //const fsPromise = Promise.promisifyAll(fs)
-
+const config = require('../config/appconfig.js').sysconfig;
+const configPLC = require('../config/appconfig.js').configPLC;
+const getPLCInfo = require('../middleware/getPLCInfo.js');
 const writeOmron = require('../middleware/node-omron-fins-master/getomroninfo.js').writeOmron;
+let plcType = config.machineType;
+console.log('plcType: ', plcType)
+// if (plcType == "ML") {
+// 	const getPLCInfo = require('../middleware/getPLCInfo.js');
+// 	// const translate2serial = require('../middleware/translate2serial.js');
+// }
+// if (plcType == "Omron") {
+// 	const writeOmron = require('../middleware/node-omron-fins-master/getomroninfo.js').writeOmron;
+// }
 
 
 /* GET home page. */
@@ -27,17 +38,35 @@ router.get('/', function (req, res, next) {
 	})
 })
 
+// const configPLC = {
+// 	plcAddr : ['N31:60', 'N31:61'],
+// 	port : 8315,
+// 	plcHost : '66.76.108.43'
+
+// 	};
+
 router.post('/pdata', function(req, res, next) {
-	writeOmron(parseInt(req.body.d, 10), (val, err)=>{
-		if (err) {
-			console.log("Write Error ", err)
-		}
-		if (val) {
-			console.log(val)
-		}
-	})
-	res.sendStatus(200);
-	
+	let data = parseInt(req.body.d, 10);
+	// console.log(`Data from test button is ${data}`);
+	if (plcType == "Omron") {
+		writeOmron(data, (val, err)=>{
+			console.log('We made it here Omron');
+			if (err) {
+				console.log("Write Error ", err)
+			}
+			if (val) {
+				console.log(val);
+			}
+		})
+		res.sendStatus(200);
+	} 
+	else if (plcType == "ML") {
+		getPLCInfo('write', configPLC, [0, data], null);
+		res.sendStatus(200);
+	} else {
+		res.sendStatus(404);
+	}
+
 });
 
 
