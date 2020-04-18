@@ -13,3 +13,5 @@
 {"_id":"7","plcFunction":"foambath","color":["#ff8040","#ffff00"],"outputType":"3","timing":"600"}
 {"_id":"8","plcFunction":"highpressure","color":"#8080c0","outputType":"3","timing":"600"}
 {"_id":"9","plcFunction":"rockers","color":"#a3d2dc","outputType":"3","timing":"600"}
+{"_id":"2","plcFunction":"bu","color":"#ff6400","outputType":"2","timing":"500"}
+{"_id":"2","plcFunction":"bu","color":"#ff6400","outputType":"1","timing":"500"}
