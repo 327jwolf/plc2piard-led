@@ -235,7 +235,7 @@ form{
 }
 
 .addColor {
-  display: inline;
+  display: inline-block;
   margin-left: 0px;
   margin-bottom: 2px;
   font-size: 16px;
@@ -279,7 +279,7 @@ form{
 }
 
 .removeColor {
- 
+ color: black;
 }
 
 .modal2 {
@@ -511,9 +511,9 @@ form{
 }
 
 .btn-machine {
-  display: inline;
+  display: inline-block;
   position: relative;
-  float: right;
+  /* float: right; */
   background-color: #2598ff;
   border-color: #2598ff;
 }

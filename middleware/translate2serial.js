@@ -3,6 +3,11 @@ const SerialPort = require("serialport"),
     leddata = require('../models/leddataschema.js'),
     path = require('path');
 const config = require('../config/appconfig.js').sysconfig;
+// const Gpio = require('pigpio').Gpio;
+// const led_R = new Gpio(17, {mode: Gpio.OUTPUT});
+// const led_G = new Gpio(22, {mode: Gpio.OUTPUT});
+// const led_B = new Gpio(24, {mode: Gpio.OUTPUT});
+
 // const plcFunctions = require('../config/appconfig.js').plcFunc;
 
 function fixString2Array (arg) {
@@ -80,6 +85,7 @@ let multiColorFunction = len => multiColorFunctionInc == len-1 ? multiColorFunct
 let outData = '';
 let output2 = {};
 let randMax = config.randMax;
+let randMin = config.randMin;
 let newColor = ['0,0,0'];
 
 function hextorgb (hex) {
@@ -89,23 +95,6 @@ function hextorgb (hex) {
     let b = (color & 0x0000ff)
     return [`${r},${g},${b}`]
 }
-
-// function getDelayedData (f) {
-    
-//     return leddata.getDBdata(f, (e, data) => {
-//         if (e) {
-//             console.log('GetDBData Error: ', e)
-//             return
-//         }
-//         let fColor = typeof data.color == 'string' 
-//         ? [hextorgb(data.color)] 
-//         : data.color.map(x => {
-//             return hextorgb(x)
-//         })  
-//         newColor = [fColor, data.plcFunction, data.outputType, data.timing]
-//         //console.log(newColor, data.color)
-//     })
-// }
 
 let plcFuncObj = {}
 let getPLCFuncObj = () => {
@@ -126,7 +115,7 @@ function translate2serial (output1) {
     getPLCFuncObj()
     output1 == undefined ? output1 = [0] : output1;
     let computedArrayLen = 1;
-    let noData = 0;
+    // let noData = 0;
     logIt('output1 =',output1);
       
 
@@ -137,7 +126,7 @@ function translate2serial (output1) {
         : plcFuncObj[outStr].color.map(x => {
             return hextorgb(x)
         })
-        console.log(fColor)   
+        logIt(fColor)   
         newColor = [fColor, plcFuncObj[outStr].plcFunction, plcFuncObj[outStr].outputType, plcFuncObj[outStr].timing]
         computedArrayLen = newColor[0].length;
         computedArrayLen == 1 ? multiColorFunctionInc = 0 : multiColorFunctionInc;
@@ -150,38 +139,15 @@ function translate2serial (output1) {
         
     }
 
-
-    
-
-    // for(let i = 0; i < Object.keys(plcFunctions).length; i++){
-    //     // console.log(`i = ${i} Output1[0]=${output1[0]} and (output1[0] & 1 << i) = ${(output1[0] & 1 << i)} and ${plcFunctions[i]}>>>>>>${Math.log(output1[0]<<1)/Math.log(2)}` )
-    //     if ((output1[0] & 1 << i) != 0) {
-
-    //         getDelayedData(plcFunctions[i])
-    //         computedArrayLen = newColor[0].length;
-    //         computedArrayLen == 1 ? multiColorFunctionInc = 0 : multiColorFunctionInc;
-    //         outputArray = Array.from(newColor[0]);
-
-    //         output2 = outputArray[multiColorFunctionInc];
-    //         logIt(`outputArray = ${JSON.stringify(outputArray)}`);
-    //         logIt(`output2 = ${JSON.stringify(output2)},  ${output2} `);
-    //         multiColorFunction(computedArrayLen);
-    //         break;
-    //     }
-
-    // }
-
     if (computedArrayLen == 1) {
         //controlRandCnt = 0;
         multiColorFunctionInc = 0;
     }
     
     if(newColor[2] == '1' && output1[0] != 0){
-    // if(output1[0] == 1){
         blink ? outData = `0, 0, 0\n` : outData = `${output2[0]}, ${output2[1]}, ${output2[2]}\n`;
     }
     else if (output1[0] === 0) {
-    // else if (output1[0] === 0) {
         newColor[2] = 0;
         newColor[0] = [0,0,0];
         if (controlRandCnt == 0) {

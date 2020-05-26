@@ -1,29 +1,29 @@
 #!/usr/bin/env node
 
-const express = require('express'),
-	path = require('path'),
-	logger = require('morgan'),
-	cookieParser = require('cookie-parser'),
-	bodyParser = require('body-parser'),
-	config = require('./config/appconfig.js').sysconfig,
-	confPLC = require('./config/appconfig.js').configPLC;
+import express, { static } from 'express';
+import { join } from 'path';
+import logger from 'morgan';
+import cookieParser from 'cookie-parser';
+import { json, urlencoded } from 'body-parser';
+import { sysconfig as config } from './config/appconfig.js';
+import { configPLC as confPLC } from './config/appconfig.js';
 
 const app = express();
 const server = require('http').createServer(app);
 
-const nodepccc = require('nodepccc'),
-	getPLCInfo = require('./middleware/getPLCInfo.js'),
-	logIt = require('./middleware/logIt.js'),
-	getOmronInfo = require('./middleware/node-omron-fins-master/getomroninfo.js').getOmronInfo,
-	translate2serial = require('./middleware/translate2serial.js'),
-	index = require('./routes/index'),
-	port = process.argv[2] || 3030;
+// import nodepccc from 'nodepccc';
+import getPLCInfo from './middleware/getPLCInfo.js';
+// import logIt from './middleware/logIt.js';
+import { getOmronInfo } from './middleware/node-omron-fins-master/getomroninfo.js';
+import translate2serial from './middleware/translate2serial.js';
+import index from './routes/index';
+const port = process.argv[2] || 3030;
 
 //app.use(express.static('public'));
 server.listen(port);
 
 // view engine setup
-app.set('views', path.join(__dirname, 'views'));
+app.set('views', join(__dirname, 'views'));
 app.set('view engine', 'pug');
 
 app.set('env', 'dev');
@@ -31,10 +31,10 @@ app.set('env', 'dev');
 // uncomment after placing your favicon in /public
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 app.use(logger('dev'));
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
+app.use(json());
+app.use(urlencoded({ extended: false }));
 app.use(cookieParser());
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(static(join(__dirname, 'public')));
 
 app.use('/', index);
 
@@ -56,12 +56,6 @@ app.use(function(err, req, res, next) {
   res.render('error');
 });
 
-
-
-
-
-
-
 console.log("Express server running nodepccc at\n  => http://localhost:" + port + "/\nCTRL + C to shutdown");
 
 //************************************************
@@ -72,14 +66,14 @@ let intervalTime = config.callInterval;
 //************************************************
 if (config.machineType == "Omron") {
 	
-	setInterval(() => getOmronInfo(translate2serial), intervalTime);
+	setInterval(() => getOmronInfo(translate2serial), config.callInterval);
 }
 
 //************************************************
 
 if (config.machineType == "ML") {
-	//getPLCInfo('read', confPLC, 0, translate2serial)
-	setInterval(() => getPLCInfo('read', confPLC, 0, translate2serial), intervalTime);
-	// getPLCInfo('write', confPLC, [0, 22], null)
+
+	setInterval(() => getPLCInfo('read', confPLC, 0, translate2serial), config.callInterval);
+
 }
 
