@@ -3,6 +3,11 @@ const SerialPort = require("serialport"),
     leddata = require('../models/leddataschema.js'),
     path = require('path');
 const config = require('../config/appconfig.js').sysconfig;
+// const Gpio = require('pigpio').Gpio;
+// const led_R = new Gpio(17, {mode: Gpio.OUTPUT});
+// const led_G = new Gpio(22, {mode: Gpio.OUTPUT});
+// const led_B = new Gpio(24, {mode: Gpio.OUTPUT});
+
 // const plcFunctions = require('../config/appconfig.js').plcFunc;
 
 function fixString2Array (arg) {
@@ -77,6 +82,7 @@ let multiColorFunction = len => multiColorFunctionInc == len-1 ? multiColorFunct
 let outData = '';
 let output2 = {};
 let randMax = config.randMax;
+let randMin = config.randMin;
 let newColor = ['0,0,0'];
 
 function hextorgb (hex) {
@@ -106,7 +112,7 @@ function translate2serial (output1) {
     getPLCFuncObj()
     output1 == undefined ? output1 = [0] : output1;
     let computedArrayLen = 1;
-    let noData = 0;
+    // let noData = 0;
     logIt('output1 =',output1);
       
 

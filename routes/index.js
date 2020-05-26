@@ -1,10 +1,10 @@
 const express = require('express');
 const router = express.Router();
 const leddata = require('../models/leddataschema.js');
-const fetch = require('node-fetch');
-const btoa = require('btoa');
-const bodyParser = require('body-parser');
-const path = require('path');
+// const fetch = require('node-fetch');
+// const btoa = require('btoa');
+// const bodyParser = require('body-parser');
+// const path = require('path');
 //const Promise = require('bluebird')
 const fs = require('fs')
 //const fsPromise = Promise.promisifyAll(fs)
@@ -13,15 +13,7 @@ const configPLC = require('../config/appconfig.js').configPLC;
 const getPLCInfo = require('../middleware/getPLCInfo.js');
 const writeOmron = require('../middleware/node-omron-fins-master/getomroninfo.js').writeOmron;
 let plcType = config.machineType;
-console.log('plcType: ', plcType)
-// if (plcType == "ML") {
-// 	const getPLCInfo = require('../middleware/getPLCInfo.js');
-// 	// const translate2serial = require('../middleware/translate2serial.js');
-// }
-// if (plcType == "Omron") {
-// 	const writeOmron = require('../middleware/node-omron-fins-master/getomroninfo.js').writeOmron;
-// }
-
+// console.log('plcType: ', plcType)
 
 /* GET home page. */
 router.get('/', function (req, res, next) {
@@ -37,13 +29,6 @@ router.get('/', function (req, res, next) {
 		});
 	})
 })
-
-// const configPLC = {
-// 	plcAddr : ['N31:60', 'N31:61'],
-// 	port : 8315,
-// 	plcHost : '66.76.108.43'
-
-// 	};
 
 router.post('/pdata', function(req, res, next) {
 	let data = parseInt(req.body.d, 10);
@@ -66,9 +51,7 @@ router.post('/pdata', function(req, res, next) {
 	} else {
 		res.sendStatus(404);
 	}
-
 });
-
 
 router.post('/newEntry', function(req, res, next) {
 
@@ -106,8 +89,6 @@ router.post('/del', function(req, res, next) {
 
 	leddata.delEntry(req, res, function(data){
 		result = JSON.stringify(data);
-		//return(result);
-		//res.send(`result= ${result}....`)
 		res.redirect('/')
 	})		
 });
@@ -116,13 +97,8 @@ router.post('/edit', function(req, res, next) {
 	//console.log(req.body)
 	leddata.findEntry(req, res, function(data){
 		result = JSON.stringify(data);
-		//console.log(result)
-		// res.send(`done adding - ${result}`);
 		res.redirect('/')
 	})		
-		
 });
-
-
 
 module.exports = router;
