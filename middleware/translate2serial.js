@@ -49,6 +49,9 @@ let Readline = SerialPort.parsers.Readline;
 
 const nano = config.serialPort;
 
+let Readline = SerialPort.parsers.Readline;
+
+
 const sPort = new SerialPort(nano, // "/dev/ttyACM0" /dev/ttyUSB0
         {
             baudRate: 9600,
