@@ -1,8 +1,8 @@
 #!/usr/bin/env node
 
 const express = require('express');
-const join = require('path').join;
-const logger = require('morgan').logger;
+const path = require('path');
+const logger = require('morgan');
 const cookieParser = require('cookie-parser');
 const bodyparser = require('body-parser');
 const  config = require('./config/appconfig.js').sysconfig;
@@ -23,7 +23,7 @@ const port = process.argv[2] || 3030;
 server.listen(port);
 
 // view engine setup
-app.set('views', join(__dirname, 'views'));
+app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
 
 app.set('env', 'dev');
@@ -34,7 +34,7 @@ app.use(logger('dev'));
 app.use(bodyparser.json());
 app.use(bodyparser.urlencoded({ extended: false }));
 app.use(cookieParser());
-app.use(static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', index);
 
