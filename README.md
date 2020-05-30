@@ -29,9 +29,9 @@ I used [this guide](https://certsimple.com/blog/deploy-node-on-linux#node-linux-
     [Service]
     ExecStart=/home/pi/code/plc2piard-led/app.js
     Restart=always
-    User=nobody
+    User=pi
     # Note RHEL/Fedora uses 'nobody', Debian/Ubuntu uses 'nogroup'
-    Group=nogroup  
+    Group=pi  
     Environment=PATH=/usr/bin:/usr/local/bin
     Environment=NODE_ENV=production
     WorkingDirectory=/home/pi/code/plc2piard-led
