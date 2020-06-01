@@ -77,6 +77,8 @@ let blink = false;
 let controlRandCnt = 0;
 let controlRandCntLim = 4;
 
+let colorInc = 0;
+
 let multiColorFunctionInc = 0;
 let multiColorFunction = len => multiColorFunctionInc == len-1 ? multiColorFunctionInc = 0 : multiColorFunctionInc++;
 let outData = '';
@@ -148,7 +150,9 @@ function translate2serial (output1) {
         newColor[2] = 0;
         newColor[0] = [0,0,0];
         if (controlRandCnt == 0) {
-            blink ? outData = `0, 0, 0\n` : outData = `${rand(randMax, 0)}, ${rand(randMax, 0)}, ${rand(randMax, 0)}\n`;
+            blink ? outData = `0, 0, 0\n` : outData = `${ (colorInc & 1) === 1 ? 255 : rand(randMax, 0)},${ (colorInc & 2) === 2  ? 255 : rand(randMax, 0)},${ (colorInc & 4) === 4 ? 255 : rand(randMax, 0)}\n`;
+            colorInc++
+            if(colorInc === 7) {colorInc = 0};
         }
     }
     else{
@@ -161,8 +165,6 @@ function translate2serial (output1) {
 
 
     sPort.write(outData, (err) => err ? console.log('Port Write Error: ', err.message): "#####");
-
-    
 
     blink = !blink;
 
