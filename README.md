@@ -55,3 +55,9 @@ With the help from the Arduino.cc  forum, I found [this](https://forum.arduino.c
 >sudo adduser YourUserName GroupToJoin  Will fix things if you need to join a group, logout and >login after you run adduser.`
 >
 Just using `sudo chmod a+rw /dev/ttyACM0` worked until I rebooted, the permissions were not persistent after a reboot on a USB port.
+
+This is an image of a PCB to allow the Arduino nano to plug into the the driver board. The diver board replaces the Diymore prototype board and removes the need for any wiring between it and the Arduino.
+
+![Image of Diver Board](https://github.com/327jwolf/plc2piard-led/blob/master/photos/driver_board.02.png?raw=true)
+
+
