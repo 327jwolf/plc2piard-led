@@ -116,8 +116,7 @@ function translate2serial (output1) {
     let computedArrayLen = 1;
     // let noData = 0;
     logIt('output1 =',output1);
-      
-
+    
     if (plcFuncObj['1'] && output1[0] != 0) {
         let outStr = (Math.log(output1[0]<<1)/Math.log(2)).toString(10)
         let fColor = typeof plcFuncObj[outStr].color == 'string' 
