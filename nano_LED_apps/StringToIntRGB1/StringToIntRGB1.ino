@@ -28,8 +28,14 @@ int currentColor = 0;
 int red, green, blue = 0;
 long randNumber;
 unsigned long previousMillis = 0;
+unsigned long previousMillis2 = 0;
 const long interval = 2000;
 int previousInChar = 0;
+bool tog = 0;
+bool blink1 = 0;
+
+String outString = "";
+char buffer[31]="";
 
 void setup() {
   // Open serial communications and wait for port to open:
@@ -58,14 +64,15 @@ void setup() {
 
 
 void loop() {
-  int inChar;
+  int inChar = ">";
   unsigned long currentMillis = millis();
 
   // Read serial input:
   if (Serial.available() > 0) {
     inChar = Serial.read();
     previousMillis = currentMillis;
-    previousInChar = inChar;
+    // previousInChar = inChar;
+    tog = 0;
   }
   
   if (isDigit(inChar)) {
@@ -74,46 +81,49 @@ void loop() {
     inString += (char)inChar;
     previousMillis = currentMillis;
     previousInChar = inChar;
+    tog = 0;
   }
 
   // if you get a comma, convert to a number,
   // set the appropriate color, and increment
   // the color counter:
-  if (inChar == ',') {
+  if (inChar == ',' && previousInChar != ',') {
+    tog = 0;
     previousMillis = currentMillis;
     previousInChar = inChar;
     // do something different for each value of currentColor:
     switch (currentColor) {
     case 0:    // 0 = red
       red = inString.toInt();
-      // clear the string for new input:
-      inString = ""; 
       break;
     case 1:    // 1 = green:
       green = inString.toInt();
-      // clear the string for new input:
-      inString = ""; 
+      break;
+    case 2:    // 1 = green:
+      blue = inString.toInt();
+      break;
+    default:    
       break;
     }
+    outString += inString;
+    outString += ", ";
+    inString = "";
     currentColor++;
   }
   // if you get a newline, you know you've got
   // the last color, i.e. blue:
-  if (inChar == '\n') {
+  if (inChar == '\n' && previousInChar != '\n') {
+    tog = 0;
     blue = inString.toInt();
+    outString += inString;
+    // clear the string for new input:
+    inString = "";
+    // reset the color counter:
+    currentColor = 0;
+    previousInChar = inChar;
+    previousMillis = currentMillis;
 
-    // set the levels of the LED.
-    // subtract value from 255 because a higher
-    // analogWrite level means a dimmer LED, since
-    // you're raising the level on the anode:
-//    if(true){
-//      randNumber = random(256);
-//      red = randNumber;
-//      randNumber = random(256);
-//      green = randNumber;
-//      randNumber = random(256);
-//      blue = randNumber;
-//    }
+
     analogWrite(11, red);
     analogWrite(3, red);
     analogWrite(9, green);
@@ -121,26 +131,24 @@ void loop() {
     analogWrite(10, blue);
     analogWrite(6, blue);
 
-    // print the colors:
-    Serial.print("Red: ");
-    Serial.print(red);
-    Serial.print(", Green: ");
-    Serial.print(green);
-    Serial.print(", Blue: ");
-    Serial.println(blue);
+    sprintf(buffer, "Red: %03d, Green: %03d, Blue: %03d", red, green, blue); 
+    Serial.println(buffer);
+    Serial.println(outString);
+    outString = "";
 
-    // clear the string for new input:
-    inString = ""; 
-    // reset the color counter:
-    currentColor = 0;
-    previousInChar = inChar;
-    previousMillis = currentMillis;
+    // print the colors:
+    // Serial.print("Red: ");
+    // Serial.print(red);
+    // Serial.print(", Green: ");
+    // Serial.print(green);
+    // Serial.print(", Blue: ");
+    // Serial.println(blue);
   }
   
-  
-  if (currentMillis - previousMillis >= interval ) {//&& inChar == previousInChar
+  if (currentMillis - previousMillis >= interval ) {
+    //&& inChar == previousInChar
     // save the last time you blinked the LED
-    //previousMillis = currentMillis;
+    previousMillis = currentMillis;
 
     analogWrite(3, 0);
     analogWrite(5, 0);
@@ -148,9 +156,29 @@ void loop() {
     analogWrite(9, 0);
     analogWrite(10, 0);
     analogWrite(11, 0);
-  } 
+  }
+  
+//    if (tog && currentMillis - previousMillis2 >= interval)
+//    {
+//      
+//      if (blink1)
+//      {
+//        analogWrite(11, 255);
+//        analogWrite(9, 255);
+//        analogWrite(10, 255);
+//        blink1 = !blink1;
+// 
+//      }
+//      else
+//      {
+//        analogWrite(11, 0);
+//        analogWrite(9, 0);
+//        analogWrite(10, 0);
+//        blink1 = !blink1;
+//
+//      }
+//      previousMillis2 = currentMillis;
+//    }
+  tog = 1; 
 
 }
-
-
-
