@@ -143,7 +143,7 @@ function translate2serial (output1) {
     }
     
     if(newColor[2] == '1' && output1[0] != 0){
-        blink ? outData = `0, 0, 0\n` : outData = `${output2[0]}, ${output2[1]}, ${output2[2]}\n`;
+        blink ? outData = `0, 0, 0\n` : outData = `${output2[0]}\n`;
     }
     else if (output1[0] === 0) {
         newColor[2] = 0;
@@ -155,7 +155,7 @@ function translate2serial (output1) {
         }
     }
     else{
-        outData = `${output2[0]}, ${output2[1]}, ${output2[2]}\n`; 
+        outData = `${output2[0]}\n`; 
     }
 
     if (!sPort.isOpen) {

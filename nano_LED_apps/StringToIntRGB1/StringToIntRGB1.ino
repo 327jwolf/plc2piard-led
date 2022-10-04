@@ -106,7 +106,7 @@ void loop() {
       break;
     }
     outString += inString;
-    outString += ", ";
+    outString += "; ";
     inString = "";
     currentColor++;
   }
